@@ -18,7 +18,6 @@ public class Ship : MonoBehaviour, Ihitable {
 
     Weapons _weapon;
     private Vector3 myRotation = Vector3.zero;
-    public static bool isDead;
     private bool _isWeaponChanging = false;
     private bool _isAiming = false;
     public float power = 0;
@@ -40,14 +39,10 @@ public class Ship : MonoBehaviour, Ihitable {
         _minPower = 0;
         _maxPower = 100;
         _weapon = Weapons.Blast;
-        isDead = false;
-
     }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (isDead)
-            return;
         transform.position = new Vector3(transform.position.x, Waver.Instance.GetY(transform.position.x), transform.position.z);
       
         if (GameManager.Instance.GetCurrentPlayer() != this 
@@ -64,9 +59,9 @@ public class Ship : MonoBehaviour, Ihitable {
 
     public void Die()
     {
-        isDead = true;
-        Destroy(gameObject);
+        // Destroy(gameObject);
         //Some other cool stuff
+        gameObject.SetActive(false);
     }
 
 
@@ -89,7 +84,7 @@ public class Ship : MonoBehaviour, Ihitable {
         }
         if (Input.GetKeyUp("space"))
         {
-            var gunTip = gameObject.transform.position + gun.gameObject.GetComponent<LineRenderer>().GetPosition(0);
+            var gunTip = gameObject.transform.position + gun.gameObject.GetComponent<LineRenderer>().GetPosition(1);
             Bullet bullet = Instantiate(bullets, transform.position, transform.rotation) as Bullet;
             bullet.Shoot(gunTip, power, angle, _weapon);
             GameManager.Instance.NextPhase();

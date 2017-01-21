@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour {
     public int SpawnMinX = 2;
     public int SpawnMaxX = 7;
 
-    private int currentPlayer;
+    private int currentPlayer = - 1;
     private int startPlayer = -1;
     private int winPlayer = -1;
     private float timer;
@@ -46,6 +46,12 @@ public class GameManager : MonoBehaviour {
         }
         instance = this;
         DontDestroyOnLoad(this.gameObject);
+
+        Players = new List<Ship>();
+        Players.Add(Instantiate(ShipPrefab.GetComponent<Ship>()));
+        Players.Add(Instantiate(ShipPrefab.GetComponent<Ship>()));
+        foreach (Ship player in Players)
+            player.gameObject.SetActive(false);
     }
 
 	// Use this for initialization
@@ -91,10 +97,10 @@ public class GameManager : MonoBehaviour {
                 timer = TurnEndDelay;
                 break;
             case TurnPhaseType.EndOfTurn:
-                if (Players.FindAll(player => !player.Equals(null)).Count == 1)
+                if (Players.FindAll(player => player.gameObject.activeSelf).Count == 1)
                 {
                     //end of turn
-                    winPlayer = Players.FindIndex(player => !player.Equals(null));
+                    winPlayer = Players.FindIndex(player => player.gameObject.activeSelf);
                     TurnPhase = TurnPhaseType.EndOfRound;
                     Debug.Log("GameManager: End Of Turn");
                 }
@@ -113,7 +119,6 @@ public class GameManager : MonoBehaviour {
                 break;
             case TurnPhaseType.EndOfRound:
                 InitRound();
-                TurnPhase = TurnPhaseType.BulletMove;
                 break;
         }
     }
@@ -122,17 +127,21 @@ public class GameManager : MonoBehaviour {
     {
         RandomizeWind();
         // randomize wave
-        Players = new List<Ship>();
-        
-        var x1 = -Random.Range(SpawnMinX, SpawnMaxX);
-        var shipObject1 = Instantiate(ShipPrefab, new Vector3(x1, Waver.Instance.GetY(x1), 1.0f), Quaternion.identity).gameObject;
-        Players.Add(shipObject1.GetComponent<Ship>());
+        InitPlayers();
+        TurnPhase = TurnPhaseType.PlayerMove;
+    }
 
-        var x2 = Random.Range(SpawnMinX, SpawnMaxX);
-        var shipObject2 = Instantiate(ShipPrefab, new Vector3(x2, Waver.Instance.GetY(x2), 1.0f), Quaternion.identity).gameObject;
-        Players.Add(shipObject2.GetComponent<Ship>());
-
-        currentPlayer = Random.Range(0, Players.Count - 1);
+    private void InitPlayers()
+    {
+        var x1 = -Random.Range(-SpawnMinX, -SpawnMaxX);
+        Players[0].gameObject.transform.position = new Vector3(x1, Waver.Instance.GetY(x1), 1.0f);
+        var x2 = -Random.Range(SpawnMinX, SpawnMaxX);
+        Players[1].gameObject.transform.position = new Vector3(x2, Waver.Instance.GetY(x2), 1.0f);
+        foreach(Ship player in Players)
+        {
+            player.gameObject.SetActive(true);
+        }
+        startPlayer = currentPlayer = Random.Range(0, 1);
     }
 
     private void NextTurn()

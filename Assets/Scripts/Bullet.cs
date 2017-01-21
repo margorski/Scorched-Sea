@@ -9,7 +9,6 @@ public class Bullet : MonoBehaviour {
     private bool _leci = false;
     private BoxCollider2D collider;
     private Vector2 velocityVector;
-
     private float colliderTimer = 0.5f;
     // Use this for initialization
     void Start () {
@@ -58,6 +57,9 @@ public class Bullet : MonoBehaviour {
 
     private void FixedUpdate()  
     {
+
+        rb.AddForce(new Vector2(GameManager.Instance.WindForce, 0.0f));
+
         if (colliderTimer > 0.0f)
         {
             colliderTimer -= Time.fixedDeltaTime;
