@@ -90,7 +90,7 @@ public class Bullet : MonoBehaviour {
                 Instantiate(ExplosionPrefab, transform.position, transform.rotation);
             }
             Die();
-            GameManager.Instance.SoundPlayer.PlayHit();
+            GameManager.Instance.SoundPlayer.PlayExplosion();
         }
     }
 
