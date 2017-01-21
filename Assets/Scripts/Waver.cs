@@ -19,6 +19,17 @@ public class Waver : MonoBehaviour {
     private static Waver _instance;
     private Waver() { }
 
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
 	// Use this for initialization
 	void Start () {
 		
@@ -31,6 +42,6 @@ public class Waver : MonoBehaviour {
 
     public float GetY(float x)
     {
-        return Mathf.Sin(Mathf.Deg2Rad * x);
+        return Mathf.Sin(Mathf.Deg2Rad * x * 20f);
     }
 }
