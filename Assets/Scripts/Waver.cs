@@ -63,7 +63,7 @@ public class Waver : MonoBehaviour {
         LoadLevel(level - 1);
     }
 
-    private List<List<Wave>> Levels = new List<List<Wave>>()
+    public List<List<Wave>> Levels = new List<List<Wave>>()
     {
         new List<Wave>(){new Wave(1, 45, 0, 20, 0) },
         new List<Wave>(){new Wave(1, 180, 0, 25, 5000f) },

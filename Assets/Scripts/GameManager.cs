@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour {
     public TurnPhaseType TurnPhase = TurnPhaseType.PlayerMove;
     public int SpawnMinX = 2;
     public int SpawnMaxX = 7;
+    public SoundPlayer SoundPlayer;
 
     public int currentPlayer = - 1;
     private int startPlayer = -1;
@@ -56,6 +57,7 @@ public class GameManager : MonoBehaviour {
         Players[1].playerName = "Player 2";
 
         backgroundNoise = gameObject.GetComponent<AudioSource>();
+        SoundPlayer = gameObject.GetComponentInChildren<SoundPlayer>();
 
         foreach (Ship player in Players)
             player.gameObject.SetActive(false);
@@ -136,6 +138,7 @@ public class GameManager : MonoBehaviour {
     
     private void InitRound()
     {
+        Waver.Instance.Init(Random.Range(0, Waver.Instance.Levels.Count));
         RandomizeWind();
         // randomize wave
         InitPlayers();
@@ -214,6 +217,6 @@ public class GameManager : MonoBehaviour {
 
     private void SetSound()
     {
-        backgroundNoise.pitch = 1.0f + Waver.Instance.GetY(GameManager.Instance.GetCurrentPlayer().gameObject.transform.position.x) / 100.0f;
+        backgroundNoise.pitch = 1.0f + Waver.Instance.GetY(GameManager.Instance.GetCurrentPlayer().gameObject.transform.position.x) / 20.0f;
     }
 }

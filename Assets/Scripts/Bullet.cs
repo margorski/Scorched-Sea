@@ -51,6 +51,7 @@ public class Bullet : MonoBehaviour {
         {
             collision.gameObject.GetComponent<Ship>().Die();
             Die();
+            GameManager.Instance.SoundPlayer.PlayExplosion();
         }
     }
 
@@ -78,6 +79,7 @@ public class Bullet : MonoBehaviour {
                 Waver.Instance.AddFunc(transform.position.x, NumberOfTurns);
             }
             Die();
+            GameManager.Instance.SoundPlayer.PlayHit();
         }
     }
 
