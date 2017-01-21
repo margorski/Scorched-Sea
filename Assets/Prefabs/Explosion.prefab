@@ -54,5 +54,5 @@ MonoBehaviour:
   ExplosionRayPrefab: {fileID: 1448488549595220, guid: 7fbd5d44faa56474cad0e3884261a462,
     type: 2}
   HowManyRays: 20
-  MaxRange: 3.15
-  HowLong: 0.6
+  MaxRange: 0.75
+  HowLong: 0.5

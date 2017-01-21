@@ -85,9 +85,9 @@ public class Waver : MonoBehaviour {
     /// <summary>
     /// Turns == -1 -> add wave that will last forever
     /// </summary>
-    public void AddFunc(float worldXEpicenter, int turns, float damp = 0.5f)
+    public void AddFunc(float worldXEpicenter, int turns, float damp = 5f)
     {
-        _addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, StandingWaveCoeff, turns, damp, worldXEpicenter));
+        _addWaves.Add(new Wave(MainAmplitude * 3.5f, Pindol200 * 1.5f, DegreesPhase + 30f, Frequency * 8f, 0.2f, turns, damp, worldXEpicenter));
     }
 
     // Update is called once per frame
