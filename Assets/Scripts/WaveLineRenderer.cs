@@ -39,9 +39,6 @@ public class WaveLineRenderer : MonoBehaviour {
         float y;
         float z = 0f;
 
-        float angle = 0f;
-
-
         for (int index = 0; index < _noOfPoints; index++)
         {
             x = WorldXStart + _pointInterval * index;

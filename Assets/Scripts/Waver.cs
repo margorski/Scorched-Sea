@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Waver : MonoBehaviour {
 
+    public float MainAmplitude = 3f;
+    public float Pindol200 = 45f;    //for 1 -> 1 sec is 1 degree
+    public float DegreesPhase = 0f;
+    public float Frequency = 10f; //1 in position is 10 in angle
+
+    private float _currentTime = 0f;
+
     public static Waver Instance
     {
         get
@@ -40,8 +47,13 @@ public class Waver : MonoBehaviour {
 		
 	}
 
+    void FixedUpdate()
+    {
+        _currentTime = Time.fixedTime;
+    }
+
     public float GetY(float x)
     {
-        return Mathf.Sin(Mathf.Deg2Rad * x * 20f);
+        return Mathf.Sin(Mathf.Deg2Rad * ((x + DegreesPhase)* Frequency) + Mathf.Deg2Rad * (_currentTime * Pindol200)) * MainAmplitude;
     }
 }
