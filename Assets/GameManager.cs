@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour {
                 if (Players.FindAll(player => player).Count == 1)
                 {
                     //end of turn
-                    Debug.Log("GameManager: End Of Turn")
+                    Debug.Log("GameManager: End Of Turn");
                 }
                 else
                 {
