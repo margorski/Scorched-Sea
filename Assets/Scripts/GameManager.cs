@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour {
         EndOfRound
     }
 
-    public List<bool> Players = new List<bool>();
+    public List<Ship> Players = new List<Ship>();
     private static GameManager instance = null;
 
     public float TurnEndDelay = 2.0f;
@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour {
     public float MaxWind;
     public int TurnCounter { private set; get; }
     public TurnPhaseType TurnPhase = TurnPhaseType.PlayerMove;
+    public int SpawnMinX = 2;
+    public int SpawnMaxX = 7;
 
     private int currentPlayer;
     private int startPlayer = -1;
@@ -48,7 +50,7 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+        InitRound();
 	}
 	
 
@@ -121,6 +123,15 @@ public class GameManager : MonoBehaviour {
         RandomizeWind();
         // randomize wave
         // generate players;
+        Players = new List<Ship>();
+        
+        var x1 = -Random.Range(SpawnMinX, SpawnMaxX);
+        var shipObject1 = Instantiate(ShipPrefab, new Vector3(x1, Waver.Instance.GetY(x1), 1.0f), Quaternion.identity).gameObject;
+        Players.Add(shipObject1.GetComponent<Ship>());
+
+        var x2 = Random.Range(SpawnMinX, SpawnMaxX);
+        var shipObject2 = Instantiate(ShipPrefab, new Vector3(x2, Waver.Instance.GetY(x2), 1.0f), Quaternion.identity).gameObject;
+        Players.Add(shipObject2.GetComponent<Ship>());
     }
 
     private void NextTurn()

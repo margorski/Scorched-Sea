@@ -52,9 +52,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Players: 
-  TurnEndDelay: 2
-  ShipPrefab: {fileID: 0}
+  TurnEndDelay: 5
+  ShipPrefab: {fileID: 1683569868162568, guid: 80aa7b5b50407194aad2d86158b0f947, type: 2}
   WindForce: 0
-  MinWind: 0
-  MaxWind: 0
+  MinWind: -10
+  MaxWind: 10
   TurnPhase: 0
