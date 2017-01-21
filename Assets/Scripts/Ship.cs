@@ -36,7 +36,13 @@ public class Ship : MonoBehaviour, Ihitable {
     private GunState _gunState = GunState.Aiming;
 
     GameObject _deck;
+
+    LineRenderer _leftSide;
+    LineRenderer _rightSide;
+    LineRenderer _Bottom;
+    LineRenderer _gun;
     LineRenderer ofDeck;
+
     Vector3 rendererPosition;
     Vector3 startPowerBarPosition;
     enum GunState
@@ -48,6 +54,8 @@ public class Ship : MonoBehaviour, Ihitable {
 
     // Use this for initialization
     void Start () {
+
+
         gameObject.AddComponent<LineRenderer>();
         gun = transform.FindChild("Dzialo");
         _minPower = 3f;
@@ -55,6 +63,9 @@ public class Ship : MonoBehaviour, Ihitable {
         power = _minPower;
         _deck = transform.FindChild("Poklad").gameObject;
         Weapon = Weapons.Blast;
+        _leftSide = transform.Find("LewaBurta").gameObject.GetComponent<LineRenderer>();
+        _rightSide = transform.Find("PrawaBurta").gameObject.GetComponent<LineRenderer>();
+        _Bottom = transform.Find("Dno").gameObject.GetComponent<LineRenderer>();
         ofDeck = gameObject.GetComponent<LineRenderer>();
         ofDeck.useWorldSpace = false;
         ofDeck.startWidth = 0.1f;
@@ -69,11 +80,12 @@ public class Ship : MonoBehaviour, Ihitable {
 
         rendererPosition = new Vector3(rendererPosition.x + deltaX, rendererPosition.y, rendererPosition.z);
 
-        for(int i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++)
         {
             ofDeck.SetPosition(i, rendererPosition);
         }
-        startPowerBarPosition = ofDeck.GetPosition(1);
+        var ofDeckPosition = ofDeck.GetPosition(1);
+        startPowerBarPosition = new Vector3(rendererPosition.x, rendererPosition.y, rendererPosition.z);
     }
 
     private bool fireButtonPressed = false;
@@ -160,5 +172,10 @@ public class Ship : MonoBehaviour, Ihitable {
         angle += z;
         angle = Mathf.Clamp(angle, clampMin, clampMax);
         gun.eulerAngles = new Vector3(0, 0, angle);
+    }
+
+    void DestroyElements()
+    {
+
     }
 }
