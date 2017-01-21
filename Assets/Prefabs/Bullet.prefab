@@ -105,7 +105,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: -0, y: 0}
   serializedVersion: 2
-  m_Size: {x: 0.4, y: 0.02}
+  m_Size: {x: 0.2, y: 0.02}
 --- !u!114 &114076730034148588
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -118,6 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NumberOfTurns: 5
+  colliderTimer: 0.3
   tempAngle: 45
   tempPower: 2
 --- !u!120 &120933223210291270
@@ -152,8 +153,8 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_Positions:
-  - {x: -0.2, y: 0, z: 1}
-  - {x: 0.2, y: 0, z: 1}
+  - {x: -0.1, y: 0, z: 1}
+  - {x: 0.1, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 0.02

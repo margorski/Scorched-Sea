@@ -84,7 +84,7 @@ public class Ship : MonoBehaviour, Ihitable {
         }
         if (Input.GetKeyUp("space"))
         {
-            var gunTip = gameObject.transform.position + gun.gameObject.GetComponent<LineRenderer>().GetPosition(1);
+            var gunTip = gun.position;// gameObject.transform.position + gun.gameObject.GetComponent<LineRenderer>().GetPosition(1);
             Bullet bullet = Instantiate(bullets, transform.position, transform.rotation) as Bullet;
             bullet.Shoot(gunTip, power, angle, _weapon);
             GameManager.Instance.NextPhase();

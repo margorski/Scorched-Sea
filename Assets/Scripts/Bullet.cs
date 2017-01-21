@@ -9,7 +9,7 @@ public class Bullet : MonoBehaviour {
     private bool _leci = false;
     private BoxCollider2D collider;
     private Vector2 velocityVector;
-    private float colliderTimer = 0.5f;
+    public float colliderTimer = 0.5f;
     // Use this for initialization
     void Start () {
         rb = gameObject.GetComponent<Rigidbody2D>();
@@ -43,6 +43,7 @@ public class Bullet : MonoBehaviour {
         _leci = true;
         this.bulletType = bulletType;
         transform.position = startPoint;
+        transform.eulerAngles = new Vector3(0.0f, 0.0f, angle);
         velocityVector = new Vector2(Mathf.Cos(Mathf.Deg2Rad * angle), Mathf.Sin(Mathf.Deg2Rad * angle)) * power;
     }
 
@@ -66,8 +67,6 @@ public class Bullet : MonoBehaviour {
             if (colliderTimer <= 0.0f)
                 collider.enabled = true;
         }
-        if (Input.GetButtonDown("Fire1"))
-            Shoot(Vector3.zero, tempPower, tempAngle, Ship.Weapons.Blast);
         if (_leci)
         {
             var angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;

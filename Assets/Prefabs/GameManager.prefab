@@ -55,8 +55,8 @@ MonoBehaviour:
   TurnEndDelay: 0.55
   ShipPrefab: {fileID: 1683569868162568, guid: 80aa7b5b50407194aad2d86158b0f947, type: 2}
   WindForce: 0
-  MinWind: -10
-  MaxWind: 10
+  MinWind: -30
+  MaxWind: 30
   TurnPhase: 0
   SpawnMinX: 2
   SpawnMaxX: 7
