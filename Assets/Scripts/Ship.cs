@@ -78,6 +78,7 @@ public class Ship : MonoBehaviour, Ihitable {
         allElements.Add(_Bottom);
         ofDeck = gameObject.GetComponent<LineRenderer>();
         ofDeck.useWorldSpace = false;
+        _isDead = false;
         ofDeck.startWidth = 0.1f;
         
         rendererPosition = _deck.GetComponent<LineRenderer>().GetPosition(0);
@@ -111,12 +112,14 @@ public class Ship : MonoBehaviour, Ihitable {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        if(_isDead)
-        {
-            destroyAll();
-            Invoke("DeadAll", 1.5f);
-            return;
-        }
+            if (_isDead)
+            {
+                destroyAll();
+                Invoke("DeadAll", 1.5f);
+                return;
+            }
+
+       
         float boatAngle;
         transform.position = new Vector3(transform.position.x, Waver.Instance.GetY(transform.position.x, out boatAngle), transform.position.z);
 
@@ -253,6 +256,8 @@ public class Ship : MonoBehaviour, Ihitable {
     }
     void DeadAll()
     {
-        gameObject.SetActive(false);
+        Destroy(gameObject);
+        GameManager.Instance.Players[GameManager.Instance.Players.IndexOf(this)] = null;
+       // gameObject.SetActive(false);
     }
 }

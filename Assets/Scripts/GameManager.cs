@@ -50,7 +50,6 @@ public class GameManager : MonoBehaviour {
         instance = this;
         DontDestroyOnLoad(this.gameObject);
 
-        Players = new List<Ship>();
         Players.Add(Instantiate(ShipPrefab.GetComponent<Ship>()));
         Players.Add(Instantiate(ShipPrefab.GetComponent<Ship>()));
         Players[0].playerName = "Player 1";
@@ -105,11 +104,11 @@ public class GameManager : MonoBehaviour {
                 timer = TurnEndDelay;
                 break;
             case TurnPhaseType.EndOfTurn:
-                if (Players.FindAll(player => player.gameObject.activeSelf).Count == 1)
+                if (Players.FindAll(player => player.gameObject.GetComponent<Ship>()._isDead).Count == 1)
                 {
                     //end of turn
-                    winPlayer = Players.FindIndex(player => player.gameObject.activeSelf);
-                    var losePlayer = Players.FindIndex(player => !player.gameObject.activeSelf);
+                    winPlayer = Players.FindIndex(player => !player.gameObject.GetComponent<Ship>()._isDead);
+                    var losePlayer = Players.FindIndex(player => player.gameObject.GetComponent<Ship>()._isDead);
                     Players[winPlayer].kill++;
                     Players[losePlayer].death++;
 
@@ -148,14 +147,25 @@ public class GameManager : MonoBehaviour {
 
     private void InitPlayers()
     {
+        for(int i = 0; i < 2; i++)
+        {
+            if (Players[i] == null)
+            {
+                Players[i] = Instantiate(ShipPrefab.GetComponent<Ship>());
+              //  Instantiate(ShipPrefab);
+            }
+        }
         var x1 = -Random.Range(SpawnMinX, SpawnMaxX);
         Players[0].gameObject.transform.position = new Vector3(x1, Waver.Instance.GetY(x1), 1.0f);
         var x2 = Random.Range(SpawnMinX, SpawnMaxX);
         Players[1].gameObject.transform.position = new Vector3(x2, Waver.Instance.GetY(x2), 1.0f);
-        foreach(Ship player in Players)
+
+
+        foreach (Ship player in Players)
         {
             player.gameObject.SetActive(true);
         }
+
         startPlayer = currentPlayer = Random.Range(0, Players.Count);
     }
 
