@@ -201,12 +201,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e679d49235765a64593582fcdde84041, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  power: 0
+  power: 4
   amplutude: 0.1
-  speed: 1
-  angle: 90
-  clampMin: 0
-  clampMax: 0
+  speed: 25
+  angle: 0
+  clampMin: -80
+  clampMax: 80
+  bullets: {fileID: 114076730034148588, guid: a9ce36ee9b7de0e4ca3fd55ece642dd0, type: 2}
 --- !u!120 &120133608927684250
 LineRenderer:
   m_ObjectHideFlags: 1

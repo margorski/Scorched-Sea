@@ -88,6 +88,7 @@ public class Waver : MonoBehaviour {
 
     public float GetY(float x)
     {
+        if (_mainWave == null) return 0f;
         return 
             _mainWave.GetY(x, _currentTime) +
             _addWaves.Sum(wave => wave.GetY(x, _currentTime));
@@ -153,6 +154,11 @@ public class Wave
             y *= (TurnsActive - CurrentTurnActive + 1) / (float)TurnsActive;
         }
         return y;
+    }
+
+    public float GetY(float x, float currentTime, ref float angle)
+    {
+        return 0f;
     }
 
     public void onNewTurn()
