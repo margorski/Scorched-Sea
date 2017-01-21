@@ -139,7 +139,6 @@ public class Wave
         }
 
         float howFar = Mathf.Abs(WorldXEpicenter - x);
-        if (howFar < 0.01) return 0f;
         var y = Mathf.Pow(2.71828f, -howFar * DampingFactor) * Mathf.Cos(Mathf.Deg2Rad * ((x + DegreesPhase) * Frequency) + Mathf.Deg2Rad * (currentTime * Pindol200)) * MainAmplitude;
         if (TurnsActive != -1 && IsActive)
         {
