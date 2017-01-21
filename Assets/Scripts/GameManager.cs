@@ -50,6 +50,9 @@ public class GameManager : MonoBehaviour {
         Players = new List<Ship>();
         Players.Add(Instantiate(ShipPrefab.GetComponent<Ship>()));
         Players.Add(Instantiate(ShipPrefab.GetComponent<Ship>()));
+        Players[0].playerName = "Player 1";
+        Players[1].playerName = "Player 2";
+
         foreach (Ship player in Players)
             player.gameObject.SetActive(false);
     }
@@ -169,10 +172,10 @@ public class GameManager : MonoBehaviour {
         WindForce = Random.Range(MinWind, MaxWind);
     }
 
-    public bool GetWinPlayer()
+    public Ship GetWinPlayer()
     {
         if (winPlayer == -1)
-            return false;
+            return null;
         return Players[winPlayer];
     }
 }

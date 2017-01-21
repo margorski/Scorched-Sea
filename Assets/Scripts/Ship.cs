@@ -20,24 +20,25 @@ public class Ship : MonoBehaviour, Ihitable {
     private Vector3 myRotation = Vector3.zero;
     private bool _isWeaponChanging = false;
     private bool _isAiming = false;
-    public float power = 0;
+    public float power = 10;
     public float amplutude = 0.1f;
     public float speed = 1;
     public float angle = 90;
-    int _minPower, _maxPower;
-    int death = 0;
-    int kill = 0;
-    int win = 0;
+    public float _minPower, _maxPower;
+    public int death = 0;
+    public int kill = 0;
     public float clampMin, clampMax;
     private Vector3 _cameraPosition;
     public Bullet bullets;
     Transform gun;
+    public string playerName;
 
     // Use this for initialization
     void Start () {
         gun = transform.FindChild("Dzialo");
-        _minPower = 0;
-        _maxPower = 100;
+        _minPower = 0.2f;
+        _maxPower = 20f;
+        power = _minPower;
         _weapon = Weapons.Blast;
     }
 	
@@ -79,7 +80,7 @@ public class Ship : MonoBehaviour, Ihitable {
     {
         if (Input.GetButton("Fire1"))
         {
-            power += 0.5f;
+            power += 0.2f;
             power = Mathf.Clamp(power,(float)_minPower,(float)_maxPower);
         }
         if (Input.GetKeyUp("space"))
@@ -88,7 +89,7 @@ public class Ship : MonoBehaviour, Ihitable {
             Bullet bullet = Instantiate(bullets, transform.position, transform.rotation) as Bullet;
             bullet.Shoot(gunTip, power, angle, _weapon);
             GameManager.Instance.NextPhase();
-            power = 0;
+            power = _minPower;
         }
     }
 
