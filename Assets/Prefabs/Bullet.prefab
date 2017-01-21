@@ -114,11 +114,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1943732681882614}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 178bbbbe8b9c28541aa91a49f82b6b79, type: 3}
+  m_Script: {fileID: 11500000, guid: 57ffedbba31200245a3615a68b70cace, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NumberOfTurns: 5
   tempAngle: 45
-  tempPower: 10
+  tempPower: 2
 --- !u!120 &120933223210291270
 LineRenderer:
   m_ObjectHideFlags: 1

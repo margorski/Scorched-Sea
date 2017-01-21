@@ -48,13 +48,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1188357466268486}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31d5511a03ccba448a22e6bbc392b966, type: 3}
+  m_Script: {fileID: 11500000, guid: f1f545ff502e7d641b8ed5efe5c33fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Players: 
   TurnEndDelay: 2
-  ShipPrefab: {fileID: 1683569868162568, guid: c8b56963ea2597e4dade6ea9efba9c1a, type: 2}
+  ShipPrefab: {fileID: 0}
   WindForce: 0
-  MinWind: -10
-  MaxWind: 10
+  MinWind: 0
+  MaxWind: 0
   TurnPhase: 0
