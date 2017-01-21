@@ -52,9 +52,9 @@ public class Waver : MonoBehaviour {
         _currentTurn = GameManager.Instance.TurnCounter;
         _mainWave = new Wave(MainAmplitude, Pindol200, DegreesPhase, Frequency, StandingWaveCoeff);
         // to play with stuff
-        //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 20f, 1f, -1, 0.5f, 6.2f));
-        //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, 1f, 5, 0.5f, 6.1f));
-        //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, 1f, 5, 0.5f, -3f));
+        //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 20f, 0f, -1, 0.5f, 4.2f));
+        //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, 1f, 5, 0.5f, 4.1f));
+        //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 20f, 1000000f, -1, 0.5f, -4.2f));
     }
 
     /// <summary>
@@ -92,6 +92,16 @@ public class Waver : MonoBehaviour {
         return 
             _mainWave.GetY(x, _currentTime) +
             _addWaves.Sum(wave => wave.GetY(x, _currentTime));
+    }
+
+    public float GetY(float x, out float angle)
+    {
+        angle = 0f;
+        if (_mainWave == null) return 0f;
+        var delta = 0.25f;
+        var h = GetY(x + delta) - GetY(x - delta);
+        angle = Mathf.Atan(h / (2f * delta)) * Mathf.Rad2Deg;
+        return GetY(x);
     }
 }
 
@@ -143,22 +153,18 @@ public class Wave
         var kaIks = Mathf.Deg2Rad * ((x + DegreesPhase) * Frequency);
         if (IsMain)
         {
-            var standing = StandingWaveCoeff < Mathf.Epsilon ? 1f : Mathf.Cos(kaIks / StandingWaveCoeff + omegaT);
-            return Mathf.Sin(kaIks + omegaT) * standing * MainAmplitude;
+            var standingMain = StandingWaveCoeff < Mathf.Epsilon ? 1f : Mathf.Cos(kaIks / StandingWaveCoeff + omegaT);
+            return Mathf.Sin(kaIks + omegaT) * standingMain * MainAmplitude;
         }
 
+        var standing = StandingWaveCoeff < Mathf.Epsilon ? 1f : -Mathf.Sin(kaIks / StandingWaveCoeff + omegaT);
         float howFar = Mathf.Abs(WorldXEpicenter - x);
-        var y = Mathf.Pow(2.71828f, -howFar * DampingFactor) * Mathf.Cos(kaIks + omegaT) * MainAmplitude;
+        var y = Mathf.Pow(2.71828f, -howFar * DampingFactor) * Mathf.Cos(kaIks + omegaT) * standing * MainAmplitude;
         if (TurnsActive != -1 && IsActive)
         {
             y *= (TurnsActive - CurrentTurnActive + 1) / (float)TurnsActive;
         }
         return y;
-    }
-
-    public float GetY(float x, float currentTime, ref float angle)
-    {
-        return 0f;
     }
 
     public void onNewTurn()

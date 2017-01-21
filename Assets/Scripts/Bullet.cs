@@ -36,14 +36,12 @@ public class Bullet : MonoBehaviour {
         Die();
     }
 
-    public void Shoot(Vector3 startPoint, float power, float angle, Ship.Weapons bulletType) 
+    public void Shoot(float power, float angle, Ship.Weapons bulletType) 
     {
         angle += 90;
         if (_leci) return;
         _leci = true;
         this.bulletType = bulletType;
-        transform.position = startPoint;
-        transform.eulerAngles = new Vector3(0.0f, 0.0f, angle);
         velocityVector = new Vector2(Mathf.Cos(Mathf.Deg2Rad * angle), Mathf.Sin(Mathf.Deg2Rad * angle)) * power;
     }
 
@@ -85,7 +83,7 @@ public class Bullet : MonoBehaviour {
 
     private bool CollideWithWater()
     {
-        return transform.position.y <= Waver.Instance.GetY(transform.position.x);
+        return collider.enabled && transform.position.y <= Waver.Instance.GetY(transform.position.x);
     }
 
     private void Die()

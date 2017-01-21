@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8843dcdd93400d428246a3cc762c2a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainAmplitude: 3
+  MainAmplitude: 1
   Pindol200: 45
   DegreesPhase: 0
   Frequency: 20

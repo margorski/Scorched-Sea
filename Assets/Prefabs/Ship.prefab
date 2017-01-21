@@ -224,8 +224,8 @@ MonoBehaviour:
   amplutude: 0.1
   speed: 50
   angle: 0
-  clampMin: -80
-  clampMax: 80
+  clampMin: -50
+  clampMax: 50
   bullets: {fileID: 114076730034148588, guid: a9ce36ee9b7de0e4ca3fd55ece642dd0, type: 2}
 --- !u!120 &120133608927684250
 LineRenderer:
