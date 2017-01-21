@@ -49,6 +49,7 @@ public class Ship : MonoBehaviour, Ihitable {
         if (isDead)
             return;
         transform.position = new Vector3(transform.position.x, Waver.Instance.GetY(transform.position.x), transform.position.z);
+      
         if (GameManager.Instance.GetCurrentPlayer() != this 
              || GameManager.Instance.TurnPhase != GameManager.TurnPhaseType.PlayerMove)
         {
@@ -88,8 +89,9 @@ public class Ship : MonoBehaviour, Ihitable {
         }
         if (Input.GetKeyUp("space"))
         {
+            var gunTip = gameObject.transform.position + gun.gameObject.GetComponent<LineRenderer>().GetPosition(0);
             Bullet bullet = Instantiate(bullets, transform.position, transform.rotation) as Bullet;
-            bullet.Shoot(transform.position, power, angle, _weapon);
+            bullet.Shoot(gunTip, power, angle, _weapon);
             GameManager.Instance.NextPhase();
             power = 0;
         }

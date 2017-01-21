@@ -26,6 +26,14 @@ public class Bullet : MonoBehaviour {
 		
 	}
 
+
+    public void OnBecameInvisible()
+    {
+        if (gameObject.transform.position.x >= -9.5 && gameObject.transform.position.x <= 9.5)
+            return;
+        Die();
+    }
+
     public void Shoot(Vector3 startPoint, float power, float angle, Ship.Weapons bulletType) 
     {
         angle += 90;

@@ -70,7 +70,7 @@ GameObject:
   - component: {fileID: 114729941928376206}
   m_Layer: 0
   m_Name: Ship
-  m_TagString: Untagged
+  m_TagString: Ship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -203,7 +203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   power: 4
   amplutude: 0.1
-  speed: 25
+  speed: 50
   angle: 0
   clampMin: -80
   clampMax: 80

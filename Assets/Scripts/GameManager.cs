@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour {
     {
         if (TurnPhase == TurnPhaseType.EndOfTurn)
         {
-            timer -= Time.deltaTime;
+            timer -= Time.fixedDeltaTime;
             if (timer <= 0.0f)
             {
                 NextPhase();
@@ -91,10 +91,10 @@ public class GameManager : MonoBehaviour {
                 timer = TurnEndDelay;
                 break;
             case TurnPhaseType.EndOfTurn:
-                if (Players.FindAll(player => player).Count == 1)
+                if (Players.FindAll(player => !player.Equals(null)).Count == 1)
                 {
                     //end of turn
-                    winPlayer = Players.FindIndex(player => player);
+                    winPlayer = Players.FindIndex(player => !player.Equals(null));
                     TurnPhase = TurnPhaseType.EndOfRound;
                     Debug.Log("GameManager: End Of Turn");
                 }
@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour {
                     }
                     // change round
 
-                    TurnPhase = TurnPhaseType.BulletMove;
+                    TurnPhase = TurnPhaseType.PlayerMove;
                 }
                 break;
             case TurnPhaseType.EndOfRound:
@@ -122,7 +122,6 @@ public class GameManager : MonoBehaviour {
     {
         RandomizeWind();
         // randomize wave
-        // generate players;
         Players = new List<Ship>();
         
         var x1 = -Random.Range(SpawnMinX, SpawnMaxX);
@@ -132,6 +131,8 @@ public class GameManager : MonoBehaviour {
         var x2 = Random.Range(SpawnMinX, SpawnMaxX);
         var shipObject2 = Instantiate(ShipPrefab, new Vector3(x2, Waver.Instance.GetY(x2), 1.0f), Quaternion.identity).gameObject;
         Players.Add(shipObject2.GetComponent<Ship>());
+
+        currentPlayer = Random.Range(0, Players.Count - 1);
     }
 
     private void NextTurn()

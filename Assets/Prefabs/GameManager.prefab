@@ -51,10 +51,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f545ff502e7d641b8ed5efe5c33fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Players: 
-  TurnEndDelay: 5
+  Players: []
+  TurnEndDelay: 0.55
   ShipPrefab: {fileID: 1683569868162568, guid: 80aa7b5b50407194aad2d86158b0f947, type: 2}
   WindForce: 0
   MinWind: -10
   MaxWind: 10
   TurnPhase: 0
+  SpawnMinX: 2
+  SpawnMaxX: 7
