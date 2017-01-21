@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour {
+    public int NumberOfTurns = 5;
     private Ship.Weapons bulletType;
     private Rigidbody2D rb;
-
-    public int NumberOfTurns = 5;
-	// Use this for initialization
-	void Start () {
-        rb = transform.FindChild("Tip").gameObject.GetComponent<Rigidbody2D>();
-        rb.centerOfMass = new Vector2(0.2f, 0.0f);
+    private bool _leci = false;
+    // Use this for initialization
+    void Start () {
+        rb = GetComponent<Rigidbody2D>();
 	}
 
-    public float tempAngle = 45;
-    public float tempPower = 100.0f;
+    public float tempAngle = 45f;
+    public float tempPower = 2f;
     
 	// Update is called once per frame
 	void Update () { 
@@ -23,11 +22,14 @@ public class Bullet : MonoBehaviour {
 
     public void Shoot(Vector3 startPoint, float power, float angle, Ship.Weapons bulletType) 
     {
+        if (_leci) return;
+        _leci = true;
         this.bulletType = bulletType;
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        
         transform.position = startPoint;
-        transform.Rotate(new Vector3(0.0f, 0.0f, 45));
-        var normalizedForce = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-        rb.velocity = normalizedForce * power;  
+        var normalizedForce = new Vector2(Mathf.Cos(Mathf.Deg2Rad * angle), Mathf.Sin(Mathf.Deg2Rad * angle));
+        rb.velocity = normalizedForce * power;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -44,6 +46,11 @@ public class Bullet : MonoBehaviour {
         Debug.Log(Input.GetButtonDown("Fire1"));
         if (Input.GetButtonDown("Fire1"))
             Shoot(Vector3.zero, tempPower, tempAngle, Ship.Weapons.Blast);
+        if (_leci)
+        {
+            var angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        }
         if (CollideWithWater())
         {
             if (bulletType == Ship.Weapons.Storm)
