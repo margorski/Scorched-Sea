@@ -29,7 +29,8 @@ public class GameManager : MonoBehaviour {
     private int startPlayer = -1;
     private int winPlayer = -1;
     private float timer;
-    
+    private AudioSource backgroundNoise;
+
     public static GameManager Instance
     {
         get
@@ -54,6 +55,8 @@ public class GameManager : MonoBehaviour {
         Players[0].playerName = "Player 1";
         Players[1].playerName = "Player 2";
 
+        backgroundNoise = gameObject.GetComponent<AudioSource>();
+
         foreach (Ship player in Players)
             player.gameObject.SetActive(false);
     }
@@ -72,6 +75,7 @@ public class GameManager : MonoBehaviour {
 
     private void FixedUpdate()
     {
+        SetSound();
         if (TurnPhase == TurnPhaseType.PlayerMove)
         {
             ChangeLevel();
@@ -206,5 +210,10 @@ public class GameManager : MonoBehaviour {
         {
             Waver.Instance.Init(5);
         }
+    }
+
+    private void SetSound()
+    {
+        backgroundNoise.pitch = 1.0f + Waver.Instance.GetY(GameManager.Instance.GetCurrentPlayer().gameObject.transform.position.x) / 100.0f;
     }
 }
