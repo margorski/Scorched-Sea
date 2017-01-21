@@ -48,7 +48,7 @@ public class Explosion : MonoBehaviour {
                 Destroy(ExplosionRays[i]);
                 continue;
             }
-            ExplosionRays[i].GetComponent<
+           // ExplosionRays[i].GetComponent<
         }
 	}
 }

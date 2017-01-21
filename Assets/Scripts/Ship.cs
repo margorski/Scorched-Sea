@@ -197,8 +197,8 @@ public class Ship : MonoBehaviour, Ihitable {
     {
         float randX = Random.Range(0.005f, 0.01f);
         float randY = Random.Range(-0.005f, 0.01f);
-       // _rightSide.parent = null;
-        _rightSide.Rotate(new Vector3((int)Random.Range(-1, 1), 0, (int)Random.Range(-1, 1)));
+        float speed = Random.Range(2, 4.5f);
+        _rightSide.Rotate(new Vector3((int)Random.Range(-1, 1) * speed, 0, (int)Random.Range(-1, 1) * speed));
 
          _rightSide.position = new Vector3(_rightSide.position.x + randX, _rightSide.position.y + randY, _rightSide.position.z);
     }
@@ -207,7 +207,8 @@ public class Ship : MonoBehaviour, Ihitable {
     {
         float randX = Random.Range(0.005f, 0.01f);
         float randY = Random.Range(-0.005f, 0.005f);
-        _leftSide.Rotate(new Vector3((int)Random.Range(-1, 1), 0, (int)Random.Range(-1, 1)));
+        float speed = Random.Range(2, 4.5f);
+        _leftSide.Rotate(new Vector3((int)Random.Range(-1, 1) * speed, 0, (int)Random.Range(-1, 1) * speed));
 
         _leftSide.position = new Vector3(_leftSide.position.x - randX, _leftSide.position.y - randY, _leftSide.position.z);
     }
@@ -216,7 +217,8 @@ public class Ship : MonoBehaviour, Ihitable {
     {
         float randX = Random.Range(0.005f, 0.01f);
         float randY = Random.Range(0.001f, 0.005f);
-        _Bottom.Rotate(new Vector3((int)Random.Range(-1, 1), 0, (int)Random.Range(-1, 1)));
+        float speed = Random.Range(2, 4.5f);
+        _Bottom.Rotate(new Vector3((int)Random.Range(-1, 1) * speed, 0, (int)Random.Range(-1, 1) * speed));
 
         _Bottom.position = new Vector3(_Bottom.position.x - randX, _Bottom.position.y - randY, _Bottom.position.z);
     }
@@ -225,7 +227,8 @@ public class Ship : MonoBehaviour, Ihitable {
     {
         float randX = Random.Range(0.005f, 0.01f);
         float randY = Random.Range(0.001f, 0.005f);
-        _deck.Rotate(new Vector3((int)Random.Range(-1, 1), 0, (int)Random.Range(-1, 1)));
+        float speed = Random.Range(2, 4.5f);
+        _deck.Rotate(new Vector3((int)Random.Range(-1, 1) * speed, 0, (int)Random.Range(-1, 1) * speed));
 
         _deck.position = new Vector3(_deck.position.x - randX, _deck.position.y + randY, _deck.position.z);
     }
@@ -234,7 +237,8 @@ public class Ship : MonoBehaviour, Ihitable {
     {
         float randX = Random.Range(0.005f, 0.01f);
         float randY = Random.Range(0.005f, 0.009f);
-        gun.Rotate(new Vector3((int)Random.Range(-1, 1), 0, (int)Random.Range(-1, 1)));
+        float speed = Random.Range(2, 4.5f);
+        gun.Rotate(new Vector3((int)Random.Range(-1, 1) * speed, 0, (int)Random.Range(-1, 1) * speed));
         gun.position = new Vector3(gun.position.x - randX, gun.position.y + randY, gun.position.z);
 
     }
