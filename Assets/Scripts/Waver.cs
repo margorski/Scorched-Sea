@@ -10,6 +10,7 @@ public class Waver : MonoBehaviour {
     public float DegreesPhase = 0f;
     public float Frequency = 10f; //1 in position is 10 in angle
     public float StandingWaveCoeff = 10f;
+    public float YOffset;
 
     private Wave _mainWave;
     private readonly List<Wave> _addWaves = new List<Wave>();
@@ -112,9 +113,10 @@ public class Waver : MonoBehaviour {
     public float GetY(float x)
     {
         if (_mainWave == null) return 0f;
-        return 
+        return
             _mainWave.GetY(x, _currentTime) +
-            _addWaves.Sum(wave => wave.GetY(x, _currentTime));
+            _addWaves.Sum(wave => wave.GetY(x, _currentTime)) +
+            YOffset;
     }
 
     public float GetY(float x, out float angle)

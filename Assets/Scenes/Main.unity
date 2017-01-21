@@ -219,6 +219,17 @@ Prefab:
       propertyPath: m_Parameters.colorGradient.key1.rgba
       value: 4280418048
       objectReference: {fileID: 0}
+    - target: {fileID: 114485091279208660, guid: 8ffa1b35e3b5ddb4f8a3a9cfaaa3a6c1,
+        type: 2}
+      propertyPath: IsCoreWave
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114485091279208660, guid: 8ffa1b35e3b5ddb4f8a3a9cfaaa3a6c1,
+        type: 2}
+      propertyPath: ChildPrefab
+      value: 
+      objectReference: {fileID: 1481195124918668, guid: 8ffa1b35e3b5ddb4f8a3a9cfaaa3a6c1,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8ffa1b35e3b5ddb4f8a3a9cfaaa3a6c1, type: 2}
   m_IsPrefabParent: 0

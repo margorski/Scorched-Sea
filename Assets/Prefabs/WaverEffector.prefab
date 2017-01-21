@@ -56,3 +56,4 @@ MonoBehaviour:
   DegreesPhase: 0
   Frequency: 20
   StandingWaveCoeff: 0
+  YOffset: -1.4
