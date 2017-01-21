@@ -36,7 +36,6 @@ public class Ship : MonoBehaviour, Ihitable {
     private Vector3 _cameraPosition;
     public Bullet bullets;
     Transform gun;
-    public string playerName;
     List<Transform> allElements;
 
     private GunState _gunState = GunState.Aiming;
@@ -102,6 +101,9 @@ public class Ship : MonoBehaviour, Ihitable {
         destroyAll += DestroyElementsLeft;
         destroyAll += DestroyElementsRight;
         destroyAll += DestroyElementsUp;
+        var indexOfPlayer = GameManager.Instance.Players.IndexOf(this);
+        if (indexOfPlayer != -1)
+            Hud.Instance.SelectWeapon(indexOfPlayer, Weapon);
     }
 
     private bool fireButtonPressed = false;

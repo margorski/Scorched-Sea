@@ -71,16 +71,21 @@ public class Hud : MonoBehaviour {
     private void FixedUpdate()
     {
         DrawWindArrow();
-        player1Name.text = GameManager.Instance.Players[0].playerName;
-        player1Stats.text = "W:" + GameManager.Instance.Players[0].kill + " L:" + GameManager.Instance.Players[0].death;
-        //weapon
-        player2Name.text = GameManager.Instance.Players[1].playerName;
-        player2Stats.text = "W:" + GameManager.Instance.Players[1].kill + " L:" + GameManager.Instance.Players[1].death;
-
+        if (GameManager.Instance.Players[0] != null)
+        {
+            player1Name.text = GameManager.Instance.playerStats[0].name;
+            player1Stats.text = "W:" + GameManager.Instance.playerStats[0].kills + " L:" + GameManager.Instance.playerStats[0].deaths;
+            //weapon
+        }
+        if (GameManager.Instance.Players[1] != null)
+        {
+            player2Name.text = GameManager.Instance.playerStats[1].name;
+            player2Stats.text = "W:" + GameManager.Instance.playerStats[1].kills + " L:" + GameManager.Instance.playerStats[1].deaths;
+        }
         WinMessage.enabled = (GameManager.Instance.TurnPhase == GameManager.TurnPhaseType.EndOfRound);
         if (WinMessage.enabled)
         {
-            WinMessage.text = GameManager.Instance.GetWinPlayer().playerName + " WIN";
+            WinMessage.text = GameManager.Instance.playerStats[GameManager.Instance.winPlayer].name + " WIN";
         }
     }
 

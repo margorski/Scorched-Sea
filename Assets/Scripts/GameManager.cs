@@ -28,9 +28,16 @@ public class GameManager : MonoBehaviour {
 
     public int currentPlayer = - 1;
     private int startPlayer = -1;
-    private int winPlayer = -1;
+    public int winPlayer = -1;
     private float timer;
     private AudioSource backgroundNoise;
+
+    public struct Stats {
+        public int kills;
+        public int deaths;
+        public string name;
+    }
+    public Stats[] playerStats = {new Stats(), new Stats()};
 
     public static GameManager Instance
     {
@@ -49,11 +56,11 @@ public class GameManager : MonoBehaviour {
         }
         instance = this;
         DontDestroyOnLoad(this.gameObject);
+        playerStats[0].name = "Player 1";
+        playerStats[1].name = "Player 2";
 
         Players.Add(Instantiate(ShipPrefab.GetComponent<Ship>()));
         Players.Add(Instantiate(ShipPrefab.GetComponent<Ship>()));
-        Players[0].playerName = "Player 1";
-        Players[1].playerName = "Player 2";
 
         backgroundNoise = gameObject.GetComponent<AudioSource>();
         SoundPlayer = gameObject.GetComponentInChildren<SoundPlayer>();
@@ -109,8 +116,8 @@ public class GameManager : MonoBehaviour {
                     //end of turn
                     winPlayer = Players.FindIndex(player => !player.gameObject.GetComponent<Ship>()._isDead);
                     var losePlayer = Players.FindIndex(player => player.gameObject.GetComponent<Ship>()._isDead);
-                    Players[winPlayer].kill++;
-                    Players[losePlayer].death++;
+                    playerStats[winPlayer].kills++;
+                    playerStats[losePlayer].deaths++;
 
                     TurnPhase = TurnPhaseType.EndOfRound;
                     timer = RoundEndDelay;
@@ -229,6 +236,14 @@ public class GameManager : MonoBehaviour {
 
     private void SetSound()
     {
-        backgroundNoise.pitch = 1.0f + Waver.Instance.GetY(GameManager.Instance.GetCurrentPlayer().gameObject.transform.position.x) / 100.0f;
+        var currentPlayer = GameManager.Instance.GetCurrentPlayer();
+        if (currentPlayer == null)
+        {
+            backgroundNoise.pitch = 1.0f + Waver.Instance.GetY(0.0f) / 100.0f;
+        }
+        else
+        {
+            backgroundNoise.pitch = 1.0f + Waver.Instance.GetY(currentPlayer.gameObject.transform.position.x) / 100.0f;
+        }
     }
 }
