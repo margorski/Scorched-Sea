@@ -7,10 +7,16 @@ public class Bullet : MonoBehaviour {
     private Ship.Weapons bulletType;
     private Rigidbody2D rb;
     private bool _leci = false;
+
+    private Vector2 velocityVector;
+
     // Use this for initialization
     void Start () {
-        rb = GetComponent<Rigidbody2D>();
-	}
+        rb = gameObject.GetComponent<Rigidbody2D>();
+
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.velocity = velocityVector;
+    }
 
     public float tempAngle = 45f;
     public float tempPower = 2f;
@@ -22,14 +28,12 @@ public class Bullet : MonoBehaviour {
 
     public void Shoot(Vector3 startPoint, float power, float angle, Ship.Weapons bulletType) 
     {
+        angle += 90;
         if (_leci) return;
         _leci = true;
         this.bulletType = bulletType;
-        rb.bodyType = RigidbodyType2D.Dynamic;
-        
         transform.position = startPoint;
-        var normalizedForce = new Vector2(Mathf.Cos(Mathf.Deg2Rad * angle), Mathf.Sin(Mathf.Deg2Rad * angle));
-        rb.velocity = normalizedForce * power;
+        velocityVector = new Vector2(Mathf.Cos(Mathf.Deg2Rad * angle), Mathf.Sin(Mathf.Deg2Rad * angle)) * power;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

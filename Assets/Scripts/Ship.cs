@@ -34,7 +34,6 @@ public class Ship : MonoBehaviour, Ihitable {
     public Bullet bullets;
     Transform gun;
 
-
     // Use this for initialization
     void Start () {
         gun = transform.FindChild("Dzialo");
@@ -43,18 +42,22 @@ public class Ship : MonoBehaviour, Ihitable {
         _weapon = Weapons.Blast;
         isDead = false;
 
-
     }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
         if (isDead)
             return;
+        transform.position = new Vector3(transform.position.x, Waver.Instance.GetY(transform.position.x), transform.position.z);
+        if (GameManager.Instance.GetCurrentPlayer() != this 
+             || GameManager.Instance.TurnPhase != GameManager.TurnPhaseType.PlayerMove)
+        {
+            return;
+        }
+
         ChangeWeapon();
         Aim();
         PowerAdjust();
-
-        transform.position = new Vector3(transform.position.x, Waver.Instance.GetY(transform.position.x), transform.position.z);
     }
 
 
@@ -87,6 +90,7 @@ public class Ship : MonoBehaviour, Ihitable {
         {
             Bullet bullet = Instantiate(bullets, transform.position, transform.rotation) as Bullet;
             bullet.Shoot(transform.position, power, angle, _weapon);
+            GameManager.Instance.NextPhase();
             power = 0;
         }
     }

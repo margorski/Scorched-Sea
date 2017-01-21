@@ -149,6 +149,11 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    public Ship GetCurrentPlayer()
+    {
+        return Players[currentPlayer];
+    }
+
     private void RandomizeWind()
     {
         WindForce = Random.Range(MinWind, MaxWind);
