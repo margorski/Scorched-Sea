@@ -55,9 +55,9 @@ public class Waver : MonoBehaviour {
         _addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, 5, 0.5f, -3f));
     }
 
-    /**
-    Turns == -1 -> add wave that will last forever
-    **/
+    /// <summary>
+    /// Turns == -1 -> add wave that will last forever
+    /// </summary>
     public void AddFunc(float worldXEpicenter, int turns, float damp = 0.5f)
     {
         _addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, turns, damp, worldXEpicenter));
