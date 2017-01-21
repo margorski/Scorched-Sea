@@ -13,6 +13,7 @@ public class Waver : MonoBehaviour {
     private Wave _mainWave;
     private readonly List<Wave> _addWaves = new List<Wave>();
     private float _currentTime = 0f;
+    private int _currentTurn = -1;
 
     public static Waver Instance
     {
@@ -42,15 +43,40 @@ public class Waver : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        Init();
+    }
+
+    public void Init()
+    {
+        _currentTurn = GameManager.Instance.TurnCounter;
         _mainWave = new Wave(MainAmplitude, Pindol200, DegreesPhase, Frequency);
-        //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, -1, 0.5f, 6.2f));
-        //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, -1, 0.5f, 6.1f));
-        //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, -1, 0.5f, -3f));
+        _addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 20f, -1, 0.5f, 6.2f));
+        _addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, 5, 0.5f, 6.1f));
+        _addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, 5, 0.5f, -3f));
+    }
+
+    /**
+    Turns == -1 -> add wave that will last forever
+    **/
+    public void AddFunc(float worldXEpicenter, int turns, float damp = 0.5f)
+    {
+        _addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, turns, damp, worldXEpicenter));
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
+        if (_currentTurn != GameManager.Instance.TurnCounter)
+        {
+            _currentTurn = GameManager.Instance.TurnCounter;
+            onNewTurn();
+        }
+    }
 
+    private void onNewTurn()
+    {
+        _addWaves.ForEach(x => x.onNewTurn());
+        _addWaves.RemoveAll(x => x.IsActive == false);
     }
 
     void FixedUpdate()
@@ -79,7 +105,9 @@ public class Wave
     private float DampingFactor = 1f;
     private int TurnsActive = 0;        //-1 special value - forever
     private float WorldXEpicenter = 0f;
-    public int CurrentTurnActive = 0;
+    private int CurrentTurnActive = 1;
+
+    public bool IsActive { get { return TurnsActive - CurrentTurnActive >= 0; } }
 
     public Wave(float amp, float pindol, float phase, float freq, int turnsActive = -1)
     {
@@ -109,16 +137,19 @@ public class Wave
         {
             return Mathf.Sin(Mathf.Deg2Rad * ((x + DegreesPhase) * Frequency) + Mathf.Deg2Rad * (currentTime * Pindol200)) * MainAmplitude;
         }
-        if (TurnsActive == -1)
+
+        float howFar = Mathf.Abs(WorldXEpicenter - x);
+        if (howFar < 0.01) return 0f;
+        var y = Mathf.Pow(2.71828f, -howFar * DampingFactor) * Mathf.Cos(Mathf.Deg2Rad * ((x + DegreesPhase) * Frequency) + Mathf.Deg2Rad * (currentTime * Pindol200)) * MainAmplitude;
+        if (TurnsActive != -1 && IsActive)
         {
-            float howFar = Mathf.Abs(WorldXEpicenter - x);
-            if (howFar < 0.01) return 0f;
-            return Mathf.Pow(2.71828f, -howFar * DampingFactor) * Mathf.Cos(Mathf.Deg2Rad * ((x + DegreesPhase) * Frequency) + Mathf.Deg2Rad * (currentTime * Pindol200)) * MainAmplitude;
+            y *= (TurnsActive - CurrentTurnActive + 1) / (float)TurnsActive;
         }
-        else if (CurrentTurnActive - TurnsActive > 0)
-        {
-            return Mathf.Sin(Mathf.Deg2Rad * ((x + DegreesPhase) * Frequency) + Mathf.Deg2Rad * (currentTime * Pindol200)) * MainAmplitude / (TurnsActive - CurrentTurnActive);
-        }
-        return 0f;
+        return y;
+    }
+
+    public void onNewTurn()
+    {
+        CurrentTurnActive++;
     }
 }
