@@ -38,9 +38,6 @@ public class Ship : MonoBehaviour, Ihitable {
 
     // Use this for initialization
     void Start () {
-        clampMin = -50;
-        clampMax = 50;
-        angle = 90;
         gun = transform.FindChild("Dzialo");
         _minPower = 0;
         _maxPower = 100;
@@ -97,7 +94,7 @@ public class Ship : MonoBehaviour, Ihitable {
 
     void Aim()
     {
-        float z = -Input.GetAxisRaw("Horizontal") * speed * Time.deltaTime;
+        float z = -Input.GetAxisRaw("Horizontal") * speed * Time.fixedDeltaTime;
         angle += z;
         angle = Mathf.Clamp(angle, clampMin, clampMax);
         gun.eulerAngles = new Vector3(0, 0, angle);

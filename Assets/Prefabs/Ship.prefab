@@ -198,15 +198,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1683569868162568}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 430109ad41077504cac24aed2b40bf25, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a639226b78e0a0409777519655d16f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   power: 0
   amplutude: 0.1
-  speed: 100
+  speed: 20
   angle: 0
-  clampMin: 0
-  clampMax: 0
+  clampMin: -80
+  clampMax: 80
 --- !u!120 &120133608927684250
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -240,7 +240,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0.25, y: -0.1, z: 0}
-  - {x: -0.25, y: -0.1, z: 1}
+  - {x: -0.25, y: -0.1, z: 0}
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 0.02
@@ -338,7 +338,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: -0.25, y: -0.1, z: 0}
-  - {x: -0.3, y: 0.1, z: 1}
+  - {x: -0.3, y: 0.1, z: 0}
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 0.02
@@ -436,7 +436,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0.3, y: 0.1, z: 0}
-  - {x: 0.25, y: -0.1, z: 1}
+  - {x: 0.25, y: -0.1, z: 0}
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 0.02
@@ -534,7 +534,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: -0.3, y: 0.1, z: 0}
-  - {x: 0.3, y: 0.1, z: 1}
+  - {x: 0.3, y: 0.1, z: 0}
   m_Parameters:
     serializedVersion: 2
     widthMultiplier: 0.02
@@ -632,10 +632,10 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0.1, z: 0}
-  - {x: 0, y: 0.3, z: 1}
+  - {x: 0, y: 0.3, z: 0}
   m_Parameters:
     serializedVersion: 2
-    widthMultiplier: 0.02
+    widthMultiplier: 0.06
     widthCurve:
       serializedVersion: 2
       m_Curve:
