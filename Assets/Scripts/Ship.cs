@@ -16,7 +16,7 @@ public class Ship : MonoBehaviour, Ihitable {
     }
 
 
-    Weapons _weapon;
+    public Weapons Weapon;
     private Vector3 myRotation = Vector3.zero;
     private bool _isWeaponChanging = false;
     private bool _isAiming = false;
@@ -54,19 +54,26 @@ public class Ship : MonoBehaviour, Ihitable {
         _maxPower = 20f;
         power = _minPower;
         _deck = transform.FindChild("Poklad").gameObject;
+        Weapon = Weapons.Blast;
         ofDeck = gameObject.GetComponent<LineRenderer>();
         ofDeck.useWorldSpace = false;
         ofDeck.startWidth = 0.1f;
         
         rendererPosition = _deck.GetComponent<LineRenderer>().GetPosition(0);
-        rendererPosition = new Vector3(rendererPosition.x - 0.3f, rendererPosition.y, rendererPosition.z);
+
+        float deltaX;
+        if (Mathf.Sign(transform.position.x) > 0.0f)
+            deltaX = 0.9f;
+        else
+            deltaX = -0.3f;
+
+        rendererPosition = new Vector3(rendererPosition.x + deltaX, rendererPosition.y, rendererPosition.z);
 
         for(int i = 0; i < 2; i++)
         {
             ofDeck.SetPosition(i, rendererPosition);
         }
         startPowerBarPosition = ofDeck.GetPosition(1);
-        _weapon = Weapons.Blast;
     }
 
     private bool fireButtonPressed = false;
@@ -107,9 +114,10 @@ public class Ship : MonoBehaviour, Ihitable {
     {
         if(Input.GetKeyDown(KeyCode.Tab))
         {
-            if (_weapon == Weapons.Blast)
-                _weapon = Weapons.Storm;
-            else _weapon = Weapons.Blast;
+            if (Weapon == Weapons.Blast)
+                Weapon = Weapons.Storm;
+            else Weapon = Weapons.Blast;
+            Hud.Instance.SelectWeapon(GameManager.Instance.currentPlayer, Weapon);
         }
     }
 
@@ -126,7 +134,7 @@ public class Ship : MonoBehaviour, Ihitable {
             case GunState.AdjustingPower:
                 power += 0.2f;
                 power = Mathf.Clamp(power, _minPower, _maxPower);
-                ofDeck.SetPosition(1, new Vector3(rendererPosition.x, (rendererPosition.y * power)/8, rendererPosition.z));
+                ofDeck.SetPosition(1, new Vector3(rendererPosition.x, rendererPosition.y + power/_maxPower * 0.5f, rendererPosition.z));
                 if (fireButtonPressed == false)
                 {
                     _gunState = GunState.Fired;
@@ -135,7 +143,7 @@ public class Ship : MonoBehaviour, Ihitable {
             case GunState.Fired:
             	ofDeck.SetPosition(1, startPowerBarPosition);
                 Bullet bullet = Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f,0.1f,0f)), gun.transform.rotation) as Bullet;
-                bullet.Shoot(power, angle, _weapon);
+                bullet.Shoot(power, angle, Weapon);
                 GameManager.Instance.NextPhase();
                 power = _minPower;
                 _gunState = GunState.Aiming;
@@ -145,6 +153,9 @@ public class Ship : MonoBehaviour, Ihitable {
 
     void Aim()
     {
+        if (_gunState == GunState.AdjustingPower)
+            return;
+
         float z = -Input.GetAxisRaw("Horizontal") * speed * Time.fixedDeltaTime;
         angle += z;
         angle = Mathf.Clamp(angle, clampMin, clampMax);

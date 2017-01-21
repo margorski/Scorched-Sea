@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour {
     public int SpawnMinX = 2;
     public int SpawnMaxX = 7;
 
-    private int currentPlayer = - 1;
+    public int currentPlayer = - 1;
     private int startPlayer = -1;
     private int winPlayer = -1;
     private float timer;
@@ -104,6 +104,10 @@ public class GameManager : MonoBehaviour {
                 {
                     //end of turn
                     winPlayer = Players.FindIndex(player => player.gameObject.activeSelf);
+                    var losePlayer = Players.FindIndex(player => !player.gameObject.activeSelf);
+                    Players[winPlayer].kill++;
+                    Players[losePlayer].death++;
+
                     TurnPhase = TurnPhaseType.EndOfRound;
                     Debug.Log("GameManager: End Of Turn");
                 }
@@ -131,20 +135,21 @@ public class GameManager : MonoBehaviour {
         RandomizeWind();
         // randomize wave
         InitPlayers();
+        Hud.Instance.SelectPlayer(currentPlayer);
         TurnPhase = TurnPhaseType.PlayerMove;
     }
 
     private void InitPlayers()
     {
-        var x1 = -Random.Range(-SpawnMinX, -SpawnMaxX);
+        var x1 = -Random.Range(SpawnMinX, SpawnMaxX);
         Players[0].gameObject.transform.position = new Vector3(x1, Waver.Instance.GetY(x1), 1.0f);
-        var x2 = -Random.Range(SpawnMinX, SpawnMaxX);
+        var x2 = Random.Range(SpawnMinX, SpawnMaxX);
         Players[1].gameObject.transform.position = new Vector3(x2, Waver.Instance.GetY(x2), 1.0f);
         foreach(Ship player in Players)
         {
             player.gameObject.SetActive(true);
         }
-        startPlayer = currentPlayer = Random.Range(0, 1);
+        startPlayer = currentPlayer = Random.Range(0, Players.Count);
     }
 
     private void NextTurn()
@@ -160,6 +165,7 @@ public class GameManager : MonoBehaviour {
         {
             currentPlayer = 0;
         }
+        Hud.Instance.SelectPlayer(currentPlayer);
     }
 
     public Ship GetCurrentPlayer()

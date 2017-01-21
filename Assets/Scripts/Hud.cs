@@ -19,8 +19,30 @@ public class Hud : MonoBehaviour {
     private Text player2Weapon1;
     private Text player2Weapon2;
     private Text WinMessage;
-    // Use this for initialization
-    void Start()
+    private static Hud instance = null;
+
+    public static Hud Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
+
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        instance = this;
+        DontDestroyOnLoad(this.gameObject);
+
+        Init();
+    }
+        // Use this for initialization
+    void Init()
     {
         windForceRenderer = transform.FindChild("Wind/Force").gameObject.GetComponent<LineRenderer>();
         windGrotURenderer = transform.FindChild("Wind/GrotD").gameObject.GetComponent<LineRenderer>();
@@ -35,6 +57,8 @@ public class Hud : MonoBehaviour {
         player2Weapon2 = transform.FindChild("Player2Info/Weapons/Weapon2Name").gameObject.GetComponent<Text>();
         WinMessage = transform.FindChild("WinMsg").gameObject.GetComponent<Text>(); ;
         WinMessage.enabled = false;
+        SelectWeapon(0, Ship.Weapons.Blast);
+        SelectWeapon(1, Ship.Weapons.Blast);
     }
 
     // Update is called once per frame
@@ -52,11 +76,55 @@ public class Hud : MonoBehaviour {
         //weapon
         player2Name.text = GameManager.Instance.Players[1].playerName;
         player2Stats.text = "W: " + GameManager.Instance.Players[1].kill + " L: " + GameManager.Instance.Players[1].death;
-        //weapon
+
         WinMessage.enabled = (GameManager.Instance.TurnPhase == GameManager.TurnPhaseType.EndOfRound);
         if (WinMessage.enabled)
         {
             WinMessage.text = GameManager.Instance.GetWinPlayer().playerName;
+        }
+    }
+
+    public void SelectWeapon(int playerNumber, Ship.Weapons weaponType)
+    {
+        if (playerNumber == 0)
+        {
+            if (weaponType == Ship.Weapons.Blast)
+            {
+                player1Weapon1.CrossFadeAlpha(1.0f, 0.7f, false);
+                player1Weapon2.CrossFadeAlpha(0.1f, 0.7f, false);
+            }
+            else
+            {
+                player1Weapon1.CrossFadeAlpha(0.1f, 0.7f, false);
+                player1Weapon2.CrossFadeAlpha(1.0f, 0.7f, false);
+            }
+        }
+        if (playerNumber == 1)
+        {
+            if (weaponType == Ship.Weapons.Blast)
+            {
+                player2Weapon1.CrossFadeAlpha(1.0f, 0.7f, false);
+                player2Weapon2.CrossFadeAlpha(0.1f, 0.7f, false);
+            }
+            else
+            {
+                player2Weapon1.CrossFadeAlpha(0.1f, 0.7f, false);
+                player2Weapon2.CrossFadeAlpha(1.0f, 0.7f, false);
+            }
+        }
+    }
+
+    public void SelectPlayer(int playerNumber)
+    {
+        if (playerNumber == 0)
+        {
+            player1Name.CrossFadeAlpha(1.0f, 1.0f, false);
+            player2Name.CrossFadeAlpha(0.1f, 1.0f, false);
+        }
+        if (playerNumber == 1)
+        {
+            player1Name.CrossFadeAlpha(0.1f, 1.0f, false);
+            player2Name.CrossFadeAlpha(1.0f, 1.0f, false);
         }
     }
 
