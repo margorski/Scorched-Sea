@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour {
     private BoxCollider2D collider;
     private Vector2 velocityVector;
     public float colliderTimer = 0.5f;
+    public GameObject ExplosionPrefab;
     // Use this for initialization
     void Start () {
         rb = gameObject.GetComponent<Rigidbody2D>();
@@ -22,9 +23,9 @@ public class Bullet : MonoBehaviour {
 
     public float tempAngle = 45f;
     public float tempPower = 2f;
-    
-	// Update is called once per frame
-	void Update () { 
+
+    // Update is called once per frame
+    void Update () { 
 		
 	}
 
@@ -49,6 +50,10 @@ public class Bullet : MonoBehaviour {
     {
         if (collision.gameObject.CompareTag("Ship") && bulletType == Ship.Weapons.Blast)
         {
+            if (bulletType == Ship.Weapons.Blast)
+            {
+                Instantiate(ExplosionPrefab, transform.position, transform.rotation);
+            }
             collision.gameObject.GetComponent<Ship>().Die();
             Die();
             GameManager.Instance.SoundPlayer.PlayExplosion();
@@ -77,6 +82,10 @@ public class Bullet : MonoBehaviour {
             {
                 // do storm
                 Waver.Instance.AddFunc(transform.position.x, NumberOfTurns);
+            }
+            if (bulletType == Ship.Weapons.Blast)
+            {
+                Instantiate(ExplosionPrefab, transform.position, transform.rotation);
             }
             Die();
             GameManager.Instance.SoundPlayer.PlayHit();
