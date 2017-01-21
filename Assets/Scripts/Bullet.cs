@@ -54,6 +54,7 @@ public class Bullet : MonoBehaviour {
             if (bulletType == Ship.Weapons.Blast)
             {
                 Instantiate(ExplosionPrefab, transform.position, transform.rotation);
+                GameManager.Instance.SoundPlayer.PlayHit();
             }
             collision.gameObject.GetComponent<Ship>().Die();
             Die();

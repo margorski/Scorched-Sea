@@ -184,7 +184,6 @@ public class Ship : MonoBehaviour, Ihitable {
                 }
                 break;
             case GunState.Fired:
-
             	ofDeck.SetPosition(1, startPowerBarPosition);
                 Bullet bullet = Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f,0.1f,0f)), gun.transform.rotation) as Bullet;
                 bullet.Shoot(power, angle, Weapon);

@@ -23,12 +23,12 @@ public class SoundPlayer : MonoBehaviour {
 
     public void PlayExplosion()
     {
-        //audioSource.PlayOneShot(explosionSounds[Random.Range(0, explosionSounds.Length)]);
+        audioSource.PlayOneShot(explosionSounds[Random.Range(0, explosionSounds.Length)]);
     }
 
     public void PlayHit()
     {
-        //audioSource.PlayOneShot(hitSounds[Random.Range(0, hitSounds.Length)]);
+        audioSource.PlayOneShot(hitSounds[Random.Range(0, hitSounds.Length)]);
     }
 
     public void StartCharging()
