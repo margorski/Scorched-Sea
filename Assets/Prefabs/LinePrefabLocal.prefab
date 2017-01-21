@@ -9,30 +9,30 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1161717373266166}
+  m_RootGameObject: {fileID: 1321667512905402}
   m_IsPrefabParent: 1
---- !u!1 &1161717373266166
+--- !u!1 &1321667512905402
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4922879085999358}
-  - component: {fileID: 120811261553376588}
+  - component: {fileID: 4938962594255156}
+  - component: {fileID: 120453722969403600}
   m_Layer: 0
-  m_Name: LinePrefab
+  m_Name: LinePrefabLocal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4922879085999358
+--- !u!4 &4938962594255156
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1161717373266166}
+  m_GameObject: {fileID: 1321667512905402}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -40,12 +40,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!120 &120811261553376588
+--- !u!120 &120453722969403600
 LineRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1161717373266166}
+  m_GameObject: {fileID: 1321667512905402}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -92,10 +92,10 @@ LineRenderer:
     colorGradient:
       key0:
         serializedVersion: 2
-        rgba: 4280418048
+        rgba: 4278255488
       key1:
         serializedVersion: 2
-        rgba: 4280418048
+        rgba: 4278255488
       key2:
         serializedVersion: 2
         rgba: 0
@@ -137,4 +137,4 @@ LineRenderer:
     numCapVertices: 0
     alignment: 0
     textureMode: 0
-  m_UseWorldSpace: 1
+  m_UseWorldSpace: 0
