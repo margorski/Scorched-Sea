@@ -23,8 +23,7 @@ GameObject:
   - component: {fileID: 92471566021343282}
   - component: {fileID: 124444765543194296}
   - component: {fileID: 81656353509217996}
-  - component: {fileID: 114758314950183492}
-  - component: {fileID: 114231633030512552}
+  - component: {fileID: 114792075377273872}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -93,7 +92,7 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1356488087952268}
   m_Enabled: 1
---- !u!114 &114231633030512552
+--- !u!114 &114792075377273872
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -101,41 +100,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1356488087952268}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05bf4bbb2ae4258468633a93e46fd350, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mode: 1
-  showGeneratedNormals: 0
-  offsetScale: 0.2
-  blurRadius: 18
-  edgeThresholdMin: 0.05
-  edgeThreshold: 0.2
-  edgeSharpness: 4
-  dlaaSharp: 0
-  ssaaShader: {fileID: 0}
-  dlaaShader: {fileID: 0}
-  nfaaShader: {fileID: 0}
-  shaderFXAAPreset2: {fileID: 0}
-  shaderFXAAPreset3: {fileID: 0}
-  shaderFXAAII: {fileID: 0}
-  shaderFXAAIII: {fileID: 0}
---- !u!114 &114758314950183492
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1356488087952268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 649607899b1a84343a0b804b25092b70, type: 3}
+  m_Script: {fileID: 11500000, guid: 4975a6e437fc3b149a8cd508ce5bdd69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   threshold: 0
-  intensity: 0.75
-  blurSize: 1
+  intensity: 2.5
+  blurSize: 0.75
   blurIterations: 1
   blurType: 0
-  fastBloomShader: {fileID: 0}
+  fastBloomShader: {fileID: 4800000, guid: 68a00c837b82e4c6d92e7da765dc5f1d, type: 3}
 --- !u!124 &124444765543194296
 Behaviour:
   m_ObjectHideFlags: 1

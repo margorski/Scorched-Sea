@@ -54,7 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WorldXStart: -11
   WorldXEnd: 11
-  NumberOfSegments: 100
+  NumberOfSegments: 500
   LineToRenderTo: {fileID: 120123894892936654}
 --- !u!120 &120123894892936654
 LineRenderer:
