@@ -20,8 +20,6 @@ public class Explosion : MonoBehaviour {
     private readonly List<RayData> ExplosionRayDatas = new List<RayData>();
     private float startTime;
 
-    private float rideTheWaveY;
-
 	// Use this for initialization
 	void Start ()
     {

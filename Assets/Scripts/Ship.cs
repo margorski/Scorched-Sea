@@ -18,11 +18,8 @@ public class Ship : MonoBehaviour, Ihitable {
     delegate void Destroy();
 
     Destroy destroyAll;
-    int lengthOfLineRenderer = 20;
     public Weapons Weapon;
     private Vector3 myRotation = Vector3.zero;
-    private bool _isWeaponChanging = false;
-    private bool _isAiming = false;
     public bool _isDead = false;
     public float power = 10;
     public float amplutude = 0.1f;
@@ -33,7 +30,6 @@ public class Ship : MonoBehaviour, Ihitable {
     public int death = 0;
     public int kill = 0;
     public float clampMin, clampMax;
-    private Vector3 _cameraPosition;
     public Bullet bullets;
     Transform gun;
     List<Transform> allElements;
@@ -56,8 +52,27 @@ public class Ship : MonoBehaviour, Ihitable {
         Fired
     }
 
+    public void SetCurrent(bool current)
+    {
+        var width = 0.02f;
+        if (current)
+            width += 0.03f;
+        
+        var deckRenderer = _deck.GetComponent<LineRenderer>();
+        deckRenderer.endWidth = deckRenderer.startWidth = width;
+    
+        var leftSideRenderer = _leftSide.GetComponent<LineRenderer>();
+        leftSideRenderer.endWidth = leftSideRenderer.startWidth = width;
+
+        var rightSideRenderer = _rightSide.GetComponent<LineRenderer>();
+        rightSideRenderer.endWidth = rightSideRenderer.startWidth = width;
+
+
+        var bottomRenderer = _Bottom.GetComponent<LineRenderer>();
+        bottomRenderer.endWidth = bottomRenderer.startWidth = width;
+    }
     // Use this for initialization
-    void Start () {
+    void Awake () {
 
         allElements = new List<Transform>();
         gameObject.AddComponent<LineRenderer>();

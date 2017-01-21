@@ -82,7 +82,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -243,8 +243,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e66634bb7c4d6ce489c9acccf907b7ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitSounds: []
-  explosionSounds: []
+  hitSounds:
+  - {fileID: 8300000, guid: 20cd91fd036d71b4b815558889846a1d, type: 3}
+  - {fileID: 8300000, guid: cf3bc56b4cd8a5344b32e82154f18b6f, type: 3}
+  - {fileID: 8300000, guid: 374876fbd236cd640945ac8f40ac3423, type: 3}
+  - {fileID: 8300000, guid: f13c59d894959114d857d0f551dccf77, type: 3}
+  - {fileID: 8300000, guid: fb27820730dfe8f4190a266138af6f0a, type: 3}
+  - {fileID: 8300000, guid: a51868d62bfc68c48bb840fe7b729981, type: 3}
+  - {fileID: 8300000, guid: b17654867a985704f8c772b196e0276c, type: 3}
+  - {fileID: 8300000, guid: a5e347e04e150c84c9436bb563290ab6, type: 3}
+  - {fileID: 8300000, guid: e8de2a8f08401e543ba4d562cddae70d, type: 3}
+  - {fileID: 8300000, guid: 570b8c771d8d651439ce3a4f469bb384, type: 3}
+  explosionSounds:
+  - {fileID: 8300000, guid: 3da45bdd7a0f69a4689a1ca43171329e, type: 3}
+  - {fileID: 8300000, guid: ae1be529e98e7ff4d8420a4c699640b6, type: 3}
+  - {fileID: 8300000, guid: ff0067d9c21deda488da42df3fbe9755, type: 3}
+  - {fileID: 8300000, guid: 31fae3bacff51bd4eb8890b2518b39e7, type: 3}
+  - {fileID: 8300000, guid: d9ac0b77fe648c84d8df19a717faed51, type: 3}
+  - {fileID: 8300000, guid: ad8b3a5a6dd569b4fa0fae42bf9a46f3, type: 3}
+  - {fileID: 8300000, guid: 28cdc969443ca204eb3736e3cd96263d, type: 3}
+  - {fileID: 8300000, guid: 41383c3fe8e52484397ea20d5418284b, type: 3}
+  - {fileID: 8300000, guid: b0e734cf134e97948bdd5f779b8bb0f4, type: 3}
+  - {fileID: 8300000, guid: f86389944b365934ca2dc5b094f81394, type: 3}
+  chargingSound: {fileID: 8300000, guid: d25db094e965ac845bd2b40ecf1a867b, type: 3}
+  shootSound: {fileID: 8300000, guid: 138d4033b62644c4b9431e8bb87c8748, type: 3}
+  aimSound: {fileID: 8300000, guid: d06cd9e828f78204ab017341abff2a8a, type: 3}
 --- !u!114 &114702045171714874
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -268,3 +291,4 @@ MonoBehaviour:
   SpawnMaxX: 7
   SoundPlayer: {fileID: 0}
   currentPlayer: -1
+  winPlayer: -1

@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour {
     
     private void InitRound()
     {
-        Waver.Instance.Init(Random.Range(0, Waver.Instance.Levels.Count));
+        Waver.Instance.Init(Random.Range(1, Waver.Instance.Levels.Count+1));
         RandomizeWind();
         // randomize wave
         InitPlayers();
@@ -174,10 +174,24 @@ public class GameManager : MonoBehaviour {
         }
 
         startPlayer = currentPlayer = Random.Range(0, Players.Count);
+        UpdateCurrentDrawing();
     }
 
+
+    private void UpdateCurrentDrawing()
+    {
+        for (var i = 0; i < Players.Count; i++)
+        {
+            if (Players[i] != null && !Players[i].Equals(null))
+            {
+                Players[i].SetCurrent(i == currentPlayer);
+            }
+        }
+    }
+    
     private void NextTurn()
     {
+        RandomizeWind();
         TurnCounter++;
     }
 
@@ -188,6 +202,7 @@ public class GameManager : MonoBehaviour {
         {
             currentPlayer = 0;
         }
+        UpdateCurrentDrawing();
         Hud.Instance.SelectPlayer(currentPlayer);
     }
 
