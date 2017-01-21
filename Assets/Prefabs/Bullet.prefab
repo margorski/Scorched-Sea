@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NumberOfTurns: 5
-  colliderTimer: 0.3
+  colliderTimer: 0.1
   tempAngle: 45
   tempPower: 2
 --- !u!120 &120933223210291270

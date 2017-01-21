@@ -57,6 +57,29 @@ public class Waver : MonoBehaviour {
         //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 20f, 1000000f, -1, 0.5f, -4.2f));
     }
 
+    public void Init(int level)
+    {
+        LoadLevel(level - 1);
+    }
+
+    private List<List<Wave>> Levels = new List<List<Wave>>()
+    {
+        new List<Wave>(){new Wave(1, 45, 0, 20, 0) },
+        new List<Wave>(){new Wave(1, 180, 0, 25, 5000f) },
+        new List<Wave>(){new Wave(2, 45, 0, 5, 50f), new Wave(1.2f, 80f, 0f, 10f, 0f, -1, 2f, 3f), new Wave(1.2f, 80f, 0f, 10f, 0f, -1, 2f, -3f) },
+        new List<Wave>(){new Wave(2, 45, 0, 5, 0f), new Wave(1.8f, 120f, 0f, 10f, 0f, -1, 0.1f, 3f), new Wave(0.4f, 20f, 0f, 100f, 0f, -1, 0.3f, -0.8f), new Wave(0.5f, 40f, 20f, 120f, 8f, -1, 0.3f, -4.0f)},
+    };
+
+    private void LoadLevel(int levelIndex)
+    {
+        _addWaves.Clear();
+        _mainWave = Levels[levelIndex][0];
+        foreach (var wave in Levels[levelIndex].Skip(1))
+        {
+            _addWaves.Add(wave);
+        }
+    }
+
     /// <summary>
     /// Turns == -1 -> add wave that will last forever
     /// </summary>

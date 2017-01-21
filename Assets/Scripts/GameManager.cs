@@ -72,6 +72,11 @@ public class GameManager : MonoBehaviour {
 
     private void FixedUpdate()
     {
+        if (TurnPhase == TurnPhaseType.PlayerMove)
+        {
+            ChangeLevel();
+            return;
+        }
         if (TurnPhase == TurnPhaseType.EndOfTurn || TurnPhase == TurnPhaseType.EndOfRound)
         {
             timer -= Time.fixedDeltaTime;
@@ -177,5 +182,29 @@ public class GameManager : MonoBehaviour {
         if (winPlayer == -1)
             return null;
         return Players[winPlayer];
+    }
+
+    public void ChangeLevel()
+    {
+        if (Input.GetKey(KeyCode.Alpha1))
+        {
+            Waver.Instance.Init(1);
+        }
+        if (Input.GetKey(KeyCode.Alpha2))
+        {
+            Waver.Instance.Init(2);
+        }
+        if (Input.GetKey(KeyCode.Alpha3))
+        {
+            Waver.Instance.Init(3);
+        }
+        if (Input.GetKey(KeyCode.Alpha4))
+        {
+            Waver.Instance.Init(4);
+        }
+        if (Input.GetKey(KeyCode.Alpha5))
+        {
+            Waver.Instance.Init(5);
+        }
     }
 }
