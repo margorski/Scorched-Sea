@@ -15,15 +15,20 @@ public class Ship : MonoBehaviour, Ihitable {
         Storm
     }
 
+    delegate void Destroy();
 
+    Destroy destroyAll;
+    int lengthOfLineRenderer = 20;
     public Weapons Weapon;
     private Vector3 myRotation = Vector3.zero;
     private bool _isWeaponChanging = false;
     private bool _isAiming = false;
+    public bool _isDead = false;
     public float power = 10;
     public float amplutude = 0.1f;
     public float speed = 1;
     public float angle = 90;
+    public float destroyAngle = 0;
     public float _minPower, _maxPower;
     public int death = 0;
     public int kill = 0;
@@ -32,15 +37,15 @@ public class Ship : MonoBehaviour, Ihitable {
     public Bullet bullets;
     Transform gun;
     public string playerName;
+    List<Transform> allElements;
 
     private GunState _gunState = GunState.Aiming;
 
-    GameObject _deck;
+    Transform _deck;
 
-    LineRenderer _leftSide;
-    LineRenderer _rightSide;
-    LineRenderer _Bottom;
-    LineRenderer _gun;
+    Transform _leftSide;
+    Transform _rightSide;
+    Transform _Bottom;
     LineRenderer ofDeck;
 
     Vector3 rendererPosition;
@@ -55,17 +60,22 @@ public class Ship : MonoBehaviour, Ihitable {
     // Use this for initialization
     void Start () {
 
-
+        allElements = new List<Transform>();
         gameObject.AddComponent<LineRenderer>();
         gun = transform.FindChild("Dzialo");
+        allElements.Add(gun);
         _minPower = 3f;
         _maxPower = 20f;
         power = _minPower;
-        _deck = transform.FindChild("Poklad").gameObject;
+        _deck = transform.FindChild("Poklad");
+        allElements.Add(_deck);
         Weapon = Weapons.Blast;
-        _leftSide = transform.Find("LewaBurta").gameObject.GetComponent<LineRenderer>();
-        _rightSide = transform.Find("PrawaBurta").gameObject.GetComponent<LineRenderer>();
-        _Bottom = transform.Find("Dno").gameObject.GetComponent<LineRenderer>();
+        _leftSide = transform.Find("LewaBurta");
+        allElements.Add(_leftSide);
+        _rightSide = transform.Find("PrawaBurta");
+        allElements.Add(_rightSide);
+        _Bottom = transform.Find("Dno");
+        allElements.Add(_Bottom);
         ofDeck = gameObject.GetComponent<LineRenderer>();
         ofDeck.useWorldSpace = false;
         ofDeck.startWidth = 0.1f;
@@ -86,6 +96,11 @@ public class Ship : MonoBehaviour, Ihitable {
         }
         var ofDeckPosition = ofDeck.GetPosition(1);
         startPowerBarPosition = new Vector3(rendererPosition.x, rendererPosition.y, rendererPosition.z);
+        destroyAll = DestroyElementsDown;
+        destroyAll += DestroyElementsGun;
+        destroyAll += DestroyElementsLeft;
+        destroyAll += DestroyElementsRight;
+        destroyAll += DestroyElementsUp;
     }
 
     private bool fireButtonPressed = false;
@@ -96,6 +111,12 @@ public class Ship : MonoBehaviour, Ihitable {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        if(_isDead)
+        {
+            destroyAll();
+            Invoke("DeadAll", 1.5f);
+            return;
+        }
         float boatAngle;
         transform.position = new Vector3(transform.position.x, Waver.Instance.GetY(transform.position.x, out boatAngle), transform.position.z);
 
@@ -107,7 +128,6 @@ public class Ship : MonoBehaviour, Ihitable {
         {
             return;
         }
-
         ChangeWeapon();
         Aim();
         GunAction();
@@ -116,9 +136,7 @@ public class Ship : MonoBehaviour, Ihitable {
 
     public void Die()
     {
-        // Destroy(gameObject);
-        //Some other cool stuff
-        gameObject.SetActive(false);
+        _isDead = true;
     }
 
 
@@ -153,6 +171,7 @@ public class Ship : MonoBehaviour, Ihitable {
                 }
                 break;
             case GunState.Fired:
+
             	ofDeck.SetPosition(1, startPowerBarPosition);
                 Bullet bullet = Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f,0.1f,0f)), gun.transform.rotation) as Bullet;
                 bullet.Shoot(power, angle, Weapon);
@@ -174,8 +193,53 @@ public class Ship : MonoBehaviour, Ihitable {
         gun.eulerAngles = new Vector3(0, 0, angle);
     }
 
-    void DestroyElements()
+    void DestroyElementsRight()
     {
+        float randX = Random.Range(0.005f, 0.01f);
+        float randY = Random.Range(-0.005f, 0.01f);
+       // _rightSide.parent = null;
+        _rightSide.Rotate(new Vector3((int)Random.Range(-1, 1), 0, (int)Random.Range(-1, 1)));
 
+         _rightSide.position = new Vector3(_rightSide.position.x + randX, _rightSide.position.y + randY, _rightSide.position.z);
+    }
+
+    void DestroyElementsLeft()
+    {
+        float randX = Random.Range(0.005f, 0.01f);
+        float randY = Random.Range(-0.005f, 0.005f);
+        _leftSide.Rotate(new Vector3((int)Random.Range(-1, 1), 0, (int)Random.Range(-1, 1)));
+
+        _leftSide.position = new Vector3(_leftSide.position.x - randX, _leftSide.position.y - randY, _leftSide.position.z);
+    }
+
+    void DestroyElementsDown()
+    {
+        float randX = Random.Range(0.005f, 0.01f);
+        float randY = Random.Range(0.001f, 0.005f);
+        _Bottom.Rotate(new Vector3((int)Random.Range(-1, 1), 0, (int)Random.Range(-1, 1)));
+
+        _Bottom.position = new Vector3(_Bottom.position.x - randX, _Bottom.position.y - randY, _Bottom.position.z);
+    }
+
+    void DestroyElementsUp()
+    {
+        float randX = Random.Range(0.005f, 0.01f);
+        float randY = Random.Range(0.001f, 0.005f);
+        _deck.Rotate(new Vector3((int)Random.Range(-1, 1), 0, (int)Random.Range(-1, 1)));
+
+        _deck.position = new Vector3(_deck.position.x - randX, _deck.position.y + randY, _deck.position.z);
+    }
+
+    void DestroyElementsGun()
+    {
+        float randX = Random.Range(0.005f, 0.01f);
+        float randY = Random.Range(0.005f, 0.009f);
+        gun.Rotate(new Vector3((int)Random.Range(-1, 1), 0, (int)Random.Range(-1, 1)));
+        gun.position = new Vector3(gun.position.x - randX, gun.position.y + randY, gun.position.z);
+
+    }
+    void DeadAll()
+    {
+        gameObject.SetActive(false);
     }
 }
