@@ -7,15 +7,18 @@ public class Bullet : MonoBehaviour {
     private Ship.Weapons bulletType;
     private Rigidbody2D rb;
     private bool _leci = false;
-
+    private BoxCollider2D collider;
     private Vector2 velocityVector;
 
+    private float colliderTimer = 0.5f;
     // Use this for initialization
     void Start () {
         rb = gameObject.GetComponent<Rigidbody2D>();
-
+        
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.velocity = velocityVector;
+        collider = gameObject.GetComponent<BoxCollider2D>();
+        collider.enabled = false;
     }
 
     public float tempAngle = 45f;
@@ -55,7 +58,12 @@ public class Bullet : MonoBehaviour {
 
     private void FixedUpdate()  
     {
-        Debug.Log(Input.GetButtonDown("Fire1"));
+        if (colliderTimer > 0.0f)
+        {
+            colliderTimer -= Time.fixedDeltaTime;
+            if (colliderTimer <= 0.0f)
+                collider.enabled = true;
+        }
         if (Input.GetButtonDown("Fire1"))
             Shoot(Vector3.zero, tempPower, tempAngle, Ship.Weapons.Blast);
         if (_leci)
