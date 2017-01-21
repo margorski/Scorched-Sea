@@ -34,6 +34,7 @@ public class Bullet : MonoBehaviour {
     {
         if (gameObject.transform.position.x >= -9.5 && gameObject.transform.position.x <= 9.5)
             return;
+        GameManager.Instance.SoundPlayer.PlayHit();
         Die();
     }
 

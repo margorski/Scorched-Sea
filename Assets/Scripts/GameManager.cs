@@ -176,6 +176,8 @@ public class GameManager : MonoBehaviour {
 
     public Ship GetCurrentPlayer()
     {
+        if (currentPlayer == -1)
+            return null;
         return Players[currentPlayer];
     }
 
@@ -217,6 +219,6 @@ public class GameManager : MonoBehaviour {
 
     private void SetSound()
     {
-        backgroundNoise.pitch = 1.0f + Waver.Instance.GetY(GameManager.Instance.GetCurrentPlayer().gameObject.transform.position.x) / 20.0f;
+        backgroundNoise.pitch = 1.0f + Waver.Instance.GetY(GameManager.Instance.GetCurrentPlayer().gameObject.transform.position.x) / 100.0f;
     }
 }

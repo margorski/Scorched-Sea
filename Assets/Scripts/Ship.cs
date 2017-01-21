@@ -156,18 +156,26 @@ public class Ship : MonoBehaviour, Ihitable {
         switch (_gunState)
         {
             case GunState.Aiming:
+                if (!GameManager.Instance.SoundPlayer.IsPlaying())
+                {
+                    GameManager.Instance.SoundPlayer.PlayAim();
+                }
                 if (fireButtonPressed)
                 {
                     _gunState = GunState.AdjustingPower;
+                    GameManager.Instance.SoundPlayer.Stop();
+                    GameManager.Instance.SoundPlayer.StartCharging();
                 }
                 break;
             case GunState.AdjustingPower:
                 power += 0.2f;
                 power = Mathf.Clamp(power, _minPower, _maxPower);
                 ofDeck.SetPosition(1, new Vector3(rendererPosition.x, rendererPosition.y + power/_maxPower * 0.5f, rendererPosition.z));
-                if (fireButtonPressed == false)
+                if (fireButtonPressed == false || power == _maxPower)
                 {
                     _gunState = GunState.Fired;
+                    GameManager.Instance.SoundPlayer.Stop();
+                    GameManager.Instance.SoundPlayer.PlayShoot();
                 }
                 break;
             case GunState.Fired:
@@ -184,13 +192,14 @@ public class Ship : MonoBehaviour, Ihitable {
 
     void Aim()
     {
-        if (_gunState == GunState.AdjustingPower)
+        if (_gunState == GunState.AdjustingPower || _gunState == GunState.Fired)
             return;
 
         float z = -Input.GetAxisRaw("Horizontal") * speed * Time.fixedDeltaTime;
         angle += z;
         angle = Mathf.Clamp(angle, clampMin, clampMax);
         gun.eulerAngles = new Vector3(0, 0, angle);
+        GameManager.Instance.SoundPlayer.MovePitch(z);
     }
 
     void DestroyElementsRight()
