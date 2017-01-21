@@ -5,6 +5,8 @@ using UnityEngine;
 public class Bullet : MonoBehaviour {
     private Ship.Weapons bulletType;
     private Rigidbody2D rb;
+
+    public int NumberOfTurns = 5;
 	// Use this for initialization
 	void Start () {
         rb = transform.FindChild("Tip").gameObject.GetComponent<Rigidbody2D>();
@@ -30,7 +32,11 @@ public class Bullet : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
+        if (collision.gameObject.CompareTag("Ship"))
+        {
+            collision.gameObject.GetComponent<Ship>().Die();
+            Die();
+        }
     }
 
     private void FixedUpdate()  
@@ -38,5 +44,25 @@ public class Bullet : MonoBehaviour {
         Debug.Log(Input.GetButtonDown("Fire1"));
         if (Input.GetButtonDown("Fire1"))
             Shoot(Vector3.zero, tempPower, tempAngle, Ship.Weapons.Blast);
+        if (CollideWithWater())
+        {
+            if (bulletType == Ship.Weapons.Storm)
+            {
+                // do storm
+                Waver.Instance.AddFunc(transform.position.x, NumberOfTurns);
+            }
+            Die();
+        }
+    }
+
+    private bool CollideWithWater()
+    {
+        return transform.position.y <= Waver.Instance.GetY(transform.position.x);
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
+        GameManager.Instance.NextPhase();
     }
 }
