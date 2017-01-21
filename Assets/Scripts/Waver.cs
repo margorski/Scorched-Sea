@@ -146,7 +146,7 @@ public class Wave
     private float WorldXEpicenter = 0f;
     private int CurrentTurnActive = 1;
 
-    public bool IsActive { get { return TurnsActive - CurrentTurnActive >= 0; } }
+    public bool IsActive { get { return TurnsActive != -1 && (TurnsActive - CurrentTurnActive >= 0); } }
 
     public Wave(float amp, float pindol, float phase, float freq, float stdWaveCoeff, int turnsActive = -1)
     {
@@ -185,7 +185,7 @@ public class Wave
         var standing = StandingWaveCoeff < Mathf.Epsilon ? 1f : -Mathf.Sin(kaIks / StandingWaveCoeff + omegaT);
         float howFar = Mathf.Abs(WorldXEpicenter - x);
         var y = Mathf.Pow(2.71828f, -howFar * DampingFactor) * Mathf.Cos(kaIks + omegaT) * standing * MainAmplitude;
-        if (TurnsActive != -1 && IsActive)
+        if (IsActive)
         {
             y *= (TurnsActive - CurrentTurnActive + 1) / (float)TurnsActive;
         }
