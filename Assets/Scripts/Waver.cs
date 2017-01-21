@@ -11,6 +11,7 @@ public class Waver : MonoBehaviour {
     public float Frequency = 10f; //1 in position is 10 in angle
     public float StandingWaveCoeff = 10f;
     public float YOffset;
+    public float TransitionTime = 0.5f;
 
     private Wave _mainWave;
     private readonly List<Wave> _addWaves = new List<Wave>();
@@ -45,17 +46,7 @@ public class Waver : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        Init();
-    }
-
-    public void Init()
-    {
         _currentTurn = GameManager.Instance.TurnCounter;
-        _mainWave = new Wave(MainAmplitude, Pindol200, DegreesPhase, Frequency, StandingWaveCoeff);
-        // to play with stuff
-        //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 20f, 0f, -1, 0.5f, 4.2f));
-        //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 10f, 1f, 5, 0.5f, 4.1f));
-        //_addWaves.Add(new Wave(MainAmplitude * 0.2f, Pindol200, DegreesPhase, Frequency * 20f, 1000000f, -1, 0.5f, -4.2f));
     }
 
     public void Init(int level)
@@ -66,9 +57,23 @@ public class Waver : MonoBehaviour {
     public List<List<Wave>> Levels = new List<List<Wave>>()
     {
         new List<Wave>(){new Wave(1, 45, 0, 20, 0) },
-        new List<Wave>(){new Wave(1, 180, 0, 25, 5000f) },
+        new List<Wave>(){new Wave(1.2f, 60f, 0, 25, 5000f) },
         new List<Wave>(){new Wave(2, 45, 0, 5, 50f), new Wave(1.2f, 80f, 0f, 10f, 0f, -1, 2f, 3f), new Wave(1.2f, 80f, 0f, 10f, 0f, -1, 2f, -3f) },
         new List<Wave>(){new Wave(2, 45, 0, 5, 0f), new Wave(1.8f, 120f, 0f, 10f, 0f, -1, 0.1f, 3f), new Wave(0.4f, 20f, 0f, 100f, 0f, -1, 0.3f, -0.8f), new Wave(0.5f, 40f, 20f, 120f, 8f, -1, 0.3f, -4.0f)},
+        new List<Wave>()
+        {   new Wave(1f, 45f, 0f, 20f, 0f), //main
+            new Wave(0.8f, 120f, 5f, 10f, 0f, 10, 0.1f, -5f),
+            new Wave(0.8f, 120f, 10f, 10f, 0f, 10, 0.1f, -4f),
+            new Wave(0.8f, 120f, 15f, 10f, 0f, 10, 0.1f, -3f),
+            new Wave(0.8f, 120f, 20f, 10f, 0f, 10, 0.1f, -2f),
+            new Wave(0.8f, 120f, 25f, 10f, 0f, 10, 0.1f, -1f),
+            new Wave(0.8f, 120f, 30f, 10f, 0f, 10, 0.1f, 0f),
+            new Wave(0.8f, 120f, 35f, 10f, 0f, 10, 0.1f, 1f),
+            new Wave(0.8f, 120f, 40f, 10f, 0f, 10, 0.1f, 2f),
+            new Wave(0.8f, 120f, 45f, 10f, 0f, 10, 0.1f, 3f),
+            new Wave(0.8f, 120f, 50f, 10f, 0f, 10, 0.1f, 4f),
+            new Wave(0.8f, 120f, 55f, 10f, 0f, 10, 0.1f, 5f),
+        },
     };
 
     private void LoadLevel(int levelIndex)
@@ -78,8 +83,14 @@ public class Waver : MonoBehaviour {
         _mainWave = Levels[levelIndex][0];
         foreach (var wave in Levels[levelIndex].Skip(1))
         {
-            _addWaves.Add(wave);
+            AddWave(wave);
         }
+    }
+
+    private void AddWave(Wave wave)
+    {
+        _addWaves.Add(wave);
+        wave.TransitionTime = TransitionTime;
     }
 
     /// <summary>
@@ -87,7 +98,7 @@ public class Waver : MonoBehaviour {
     /// </summary>
     public void AddFunc(float worldXEpicenter, int turns, float damp = 5f)
     {
-        _addWaves.Add(new Wave(MainAmplitude * 3.5f, Pindol200 * 1.5f, DegreesPhase + 30f, Frequency * 8f, 0.2f, turns, damp, worldXEpicenter));
+        AddWave(new Wave(MainAmplitude * 3.5f, Pindol200 * 1.5f, DegreesPhase + 30f, Frequency * 8f, 0.2f, turns, damp, worldXEpicenter));
     }
 
     // Update is called once per frame
@@ -103,12 +114,13 @@ public class Waver : MonoBehaviour {
     private void onNewTurn()
     {
         _addWaves.ForEach(x => x.onNewTurn());
-        _addWaves.RemoveAll(x => x.IsActive == false);
+        _addWaves.Where(x => x.IsActive == false).ToList().ForEach(x => x.DieOut());
     }
 
     void FixedUpdate()
     {
         _currentTime = Time.fixedTime;
+        _addWaves.RemoveAll(x => x.State == Wave.WaveState.Dead);
     }
 
     public float GetY(float x)
@@ -133,6 +145,7 @@ public class Waver : MonoBehaviour {
 
 public class Wave
 {
+    public float TransitionTime;
     // Main wave
     private float MainAmplitude = 3f;
     private float Pindol200 = 45f;    //for 1 -> 1 sec is 1 degree
@@ -146,6 +159,17 @@ public class Wave
     private int TurnsActive = 0;        //-1 special value - forever
     private float WorldXEpicenter = 0f;
     private int CurrentTurnActive = 1;
+    private float _transitionTimestamp;
+
+    public enum WaveState
+    {
+        Awake,
+        Damping,
+        Dying,
+        Dead
+    };
+
+    public WaveState State = WaveState.Awake;
 
     public bool IsActive { get { return TurnsActive == -1 || (TurnsActive - CurrentTurnActive >= 0); } }
 
@@ -175,6 +199,7 @@ public class Wave
 
     public float GetY(float x, float currentTime)
     {
+        if (State == WaveState.Dead) return 0f;
         var omegaT = Mathf.Deg2Rad * (currentTime * Pindol200);
         var kaIks = Mathf.Deg2Rad * ((x + DegreesPhase) * Frequency);
         if (IsMain)
@@ -186,15 +211,52 @@ public class Wave
         var standing = StandingWaveCoeff < Mathf.Epsilon ? 1f : -Mathf.Sin(kaIks / StandingWaveCoeff + omegaT);
         float howFar = Mathf.Abs(WorldXEpicenter - x);
         var y = Mathf.Pow(2.71828f, -howFar * DampingFactor) * Mathf.Cos(kaIks + omegaT) * standing * MainAmplitude;
+        var turnDelta = 0f;
+        if (State == WaveState.Dying || State == WaveState.Damping)
+        {
+            var timeDelta = Time.time - _transitionTimestamp;
+            var timeDeltaScale = 1f - (timeDelta) / TransitionTime;
+            if (State == WaveState.Dying && timeDelta > TransitionTime)
+            {
+                State = WaveState.Dead;
+                return 0f;
+            }
+            if (State == WaveState.Dying)
+            {
+                y *= timeDeltaScale / (float)TurnsActive;
+            }
+            if (State == WaveState.Damping && timeDelta > TransitionTime)
+            {
+                State = Wave.WaveState.Awake;
+            }
+            else
+            {
+                turnDelta = timeDeltaScale / TurnsActive;
+            }
+        }
         if (TurnsActive != -1 && IsActive)
         {
-            y *= (TurnsActive - CurrentTurnActive + 1) / (float)TurnsActive;
+            y *= (TurnsActive - CurrentTurnActive + 1) / (float)TurnsActive + turnDelta;
         }
+
         return y;
+    }
+
+    public void DieOut()
+    {
+        State = WaveState.Dying;
+        StartTransition();
     }
 
     public void onNewTurn()
     {
+        State = WaveState.Damping;
+        StartTransition();
         CurrentTurnActive++;
+    }
+
+    private void StartTransition()
+    {
+        _transitionTimestamp = Time.time;
     }
 }
