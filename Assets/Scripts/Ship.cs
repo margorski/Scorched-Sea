@@ -21,7 +21,6 @@ public class Ship : MonoBehaviour, Ihitable {
     public static bool isDead;
     private bool _isWeaponChanging = false;
     private bool _isAiming = false;
-    private bool _isShake = false;
     public float power = 0;
     public float amplutude = 0.1f;
     public float speed = 1;
@@ -32,7 +31,7 @@ public class Ship : MonoBehaviour, Ihitable {
     int win = 0;
     public float clampMin, clampMax;
     private Vector3 _cameraPosition;
-
+    public Bullet bullets;
     Transform gun;
 
 
@@ -86,10 +85,10 @@ public class Ship : MonoBehaviour, Ihitable {
         }
         if (Input.GetKeyUp("space"))
         {
-            _isShake = true;
+            Bullet bullet = Instantiate(bullets, transform.position, transform.rotation) as Bullet;
+            bullet.Shoot(transform.position, power, angle, _weapon);
             power = 0;
         }
-
     }
 
     void Aim()
