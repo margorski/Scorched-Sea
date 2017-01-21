@@ -35,6 +35,10 @@ public class Ship : MonoBehaviour, Ihitable {
 
     private GunState _gunState = GunState.Aiming;
 
+    GameObject _deck;
+    LineRenderer ofDeck;
+    Vector3 rendererPosition;
+    Vector3 startPowerBarPosition;
     enum GunState
     {
         Aiming,
@@ -44,10 +48,24 @@ public class Ship : MonoBehaviour, Ihitable {
 
     // Use this for initialization
     void Start () {
+        gameObject.AddComponent<LineRenderer>();
         gun = transform.FindChild("Dzialo");
         _minPower = 3f;
         _maxPower = 20f;
         power = _minPower;
+        _deck = transform.FindChild("Poklad").gameObject;
+        ofDeck = gameObject.GetComponent<LineRenderer>();
+        ofDeck.useWorldSpace = false;
+        ofDeck.startWidth = 0.1f;
+        
+        rendererPosition = _deck.GetComponent<LineRenderer>().GetPosition(0);
+        rendererPosition = new Vector3(rendererPosition.x - 0.3f, rendererPosition.y, rendererPosition.z);
+
+        for(int i = 0; i < 2; i++)
+        {
+            ofDeck.SetPosition(i, rendererPosition);
+        }
+        startPowerBarPosition = ofDeck.GetPosition(1);
         _weapon = Weapons.Blast;
     }
 
@@ -108,12 +126,14 @@ public class Ship : MonoBehaviour, Ihitable {
             case GunState.AdjustingPower:
                 power += 0.2f;
                 power = Mathf.Clamp(power, _minPower, _maxPower);
+                ofDeck.SetPosition(1, new Vector3(rendererPosition.x, (rendererPosition.y * power)/8, rendererPosition.z));
                 if (fireButtonPressed == false)
                 {
                     _gunState = GunState.Fired;
                 }
                 break;
             case GunState.Fired:
+            	ofDeck.SetPosition(1, startPowerBarPosition);
                 Bullet bullet = Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f,0.1f,0f)), gun.transform.rotation) as Bullet;
                 bullet.Shoot(power, angle, _weapon);
                 GameManager.Instance.NextPhase();
