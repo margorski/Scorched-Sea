@@ -15,13 +15,13 @@ public class GameManager : MonoBehaviour {
 
     public float TurnEndDelay = 2.0f;
     public GameObject ShipPrefab;
-    public float WindForce { private set; get; }
+    public float WindForce;
     public float MinWind;
     public float MaxWind;
+    public int TurnCounter { private set; get; }
 
     private TurnPhaseType turnPhase = TurnPhaseType.PlayerMove;
     private int currentPlayer;
-    private int turnCounter;
     private int startPlayer = -1;
     private float timer;
     
@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour {
 
     private void NextTurn()
     {
-        turnCounter++;
+        TurnCounter++;
         RandomizeWind();
     }
 
