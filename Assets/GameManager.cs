@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-    private enum TurnPhaseType
+    public enum TurnPhaseType
     {
         PlayerMove,
         BulletMove,
-        EndOfTurn
+        EndOfTurn,
+        EndOfRound
     }
 
-    private List<bool> Players = new List<bool>();
+    public List<bool> Players = new List<bool>();
     private static GameManager instance = null;
 
     public float TurnEndDelay = 2.0f;
@@ -19,10 +20,11 @@ public class GameManager : MonoBehaviour {
     public float MinWind;
     public float MaxWind;
     public int TurnCounter { private set; get; }
+    public TurnPhaseType TurnPhase = TurnPhaseType.PlayerMove;
 
-    private TurnPhaseType turnPhase = TurnPhaseType.PlayerMove;
     private int currentPlayer;
     private int startPlayer = -1;
+    private int winPlayer = -1;
     private float timer;
     
     public static GameManager Instance
@@ -58,10 +60,17 @@ public class GameManager : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        if (turnPhase == TurnPhaseType.EndOfTurn)
+        if (TurnPhase == TurnPhaseType.EndOfTurn)
         {
             timer -= Time.deltaTime;
             if (timer <= 0.0f)
+            {
+                NextPhase();
+            }
+        }
+        else if (TurnPhase == TurnPhaseType.EndOfRound)
+        {
+            if (Input.GetButtonDown("Fire1"))
             {
                 NextPhase();
             }
@@ -70,19 +79,21 @@ public class GameManager : MonoBehaviour {
 
     public void NextPhase()
     {
-        switch (turnPhase)
+        switch (TurnPhase)
         {
             case TurnPhaseType.PlayerMove:
-                turnPhase = TurnPhaseType.BulletMove;
+                TurnPhase = TurnPhaseType.BulletMove;
                 break;
             case TurnPhaseType.BulletMove:
-                turnPhase = TurnPhaseType.EndOfTurn;
+                TurnPhase = TurnPhaseType.EndOfTurn;
                 timer = TurnEndDelay;
                 break;
             case TurnPhaseType.EndOfTurn:
                 if (Players.FindAll(player => player).Count == 1)
                 {
                     //end of turn
+                    winPlayer = Players.FindIndex(player => player);
+                    TurnPhase = TurnPhaseType.EndOfRound;
                     Debug.Log("GameManager: End Of Turn");
                 }
                 else
@@ -94,8 +105,13 @@ public class GameManager : MonoBehaviour {
                         NextTurn();
                     }
                     // change round
+
+                    TurnPhase = TurnPhaseType.BulletMove;
                 }
-                turnPhase = TurnPhaseType.BulletMove;
+                break;
+            case TurnPhaseType.EndOfRound:
+                InitRound();
+                TurnPhase = TurnPhaseType.BulletMove;
                 break;
         }
     }
@@ -105,12 +121,6 @@ public class GameManager : MonoBehaviour {
         RandomizeWind();
         // randomize wave
         // generate players;
-    }
-
-    private void NextRound()
-    {
-        //Players.Find(player => player).win++;
-        InitRound();
     }
 
     private void NextTurn()
@@ -131,5 +141,12 @@ public class GameManager : MonoBehaviour {
     private void RandomizeWind()
     {
         WindForce = Random.Range(MinWind, MaxWind);
+    }
+
+    public bool GetWinPlayer()
+    {
+        if (winPlayer == -1)
+            return false;
+        return Players[winPlayer];
     }
 }

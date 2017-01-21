@@ -33,7 +33,8 @@ public class Hud : MonoBehaviour {
         player2Stats = transform.FindChild("Player2Info/Statistics").gameObject.GetComponent<Text>();
         player2Weapon1 = transform.FindChild("Player2Info/Weapons/Weapon1Name").gameObject.GetComponent<Text>();
         player2Weapon2 = transform.FindChild("Player2Info/Weapons/Weapon2Name").gameObject.GetComponent<Text>();
-        WinMessage = transform.FindChild("WinMsg").gameObject.GetComponent<Text>();
+        WinMessage = transform.FindChild("WinMsg").gameObject.GetComponent<Text>(); ;
+        WinMessage.enabled = false;
     }
 
     // Update is called once per frame
@@ -46,6 +47,18 @@ public class Hud : MonoBehaviour {
     private void FixedUpdate()
     {
         DrawWindArrow();
+        //player1Name.text = GameManager.Instance.Players[0].name;
+        //player1Stats = "W: " + GameManager.Instance.Players[0].wins + " L: " + GameManager.Instance.Players[0].loss;
+        //weapon
+        //player2Name.text = GameManager.Instance.Players[1].name;
+        //player2Stats = "W: " + GameManager.Instance.Players[1].wins + " L: " + GameManager.Instance.Players[1].loss;
+        //weapon
+        WinMessage.enabled = (GameManager.Instance.TurnPhase == GameManager.TurnPhaseType.EndOfRound);
+        if (WinMessage.enabled)
+        {
+            // WinMessage.text = GameManager.Instance.GetWinPlayer().name;
+
+        }
     }
 
     void DrawWindArrow()
