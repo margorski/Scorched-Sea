@@ -72,15 +72,15 @@ public class Hud : MonoBehaviour {
     {
         DrawWindArrow();
         player1Name.text = GameManager.Instance.Players[0].playerName;
-        player1Stats.text = "W: " + GameManager.Instance.Players[0].kill + " L: " + GameManager.Instance.Players[0].death;
+        player1Stats.text = "W:" + GameManager.Instance.Players[0].kill + " L:" + GameManager.Instance.Players[0].death;
         //weapon
         player2Name.text = GameManager.Instance.Players[1].playerName;
-        player2Stats.text = "W: " + GameManager.Instance.Players[1].kill + " L: " + GameManager.Instance.Players[1].death;
+        player2Stats.text = "W:" + GameManager.Instance.Players[1].kill + " L:" + GameManager.Instance.Players[1].death;
 
         WinMessage.enabled = (GameManager.Instance.TurnPhase == GameManager.TurnPhaseType.EndOfRound);
         if (WinMessage.enabled)
         {
-            WinMessage.text = GameManager.Instance.GetWinPlayer().playerName;
+            WinMessage.text = GameManager.Instance.GetWinPlayer().playerName + " WIN";
         }
     }
 

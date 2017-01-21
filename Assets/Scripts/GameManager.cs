@@ -14,7 +14,8 @@ public class GameManager : MonoBehaviour {
     public List<Ship> Players = new List<Ship>();
     private static GameManager instance = null;
 
-    public float TurnEndDelay = 2.0f;
+    public float TurnEndDelay = 0.5f;
+    public float RoundEndDelay = 3.0f;
     public GameObject ShipPrefab;
     public float WindForce;
     public float MinWind;
@@ -71,17 +72,10 @@ public class GameManager : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        if (TurnPhase == TurnPhaseType.EndOfTurn)
+        if (TurnPhase == TurnPhaseType.EndOfTurn || TurnPhase == TurnPhaseType.EndOfRound)
         {
             timer -= Time.fixedDeltaTime;
             if (timer <= 0.0f)
-            {
-                NextPhase();
-            }
-        }
-        else if (TurnPhase == TurnPhaseType.EndOfRound)
-        {
-            if (Input.GetButtonDown("Fire1"))
             {
                 NextPhase();
             }
@@ -109,6 +103,7 @@ public class GameManager : MonoBehaviour {
                     Players[losePlayer].death++;
 
                     TurnPhase = TurnPhaseType.EndOfRound;
+                    timer = RoundEndDelay;
                     Debug.Log("GameManager: End Of Turn");
                 }
                 else
@@ -155,7 +150,6 @@ public class GameManager : MonoBehaviour {
     private void NextTurn()
     {
         TurnCounter++;
-        RandomizeWind();
     }
 
     private void NextPlayer()
