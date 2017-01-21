@@ -109,9 +109,7 @@ public class GameManager : MonoBehaviour {
 
     private void NextRound()
     {
-        Players.Find(player => player) {
-            // add win
-        }
+        //Players.Find(player => player).win++;
         InitRound();
     }
 
