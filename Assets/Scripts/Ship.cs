@@ -306,7 +306,6 @@ public class Ship : MonoBehaviour, IHitable {
             var gunAngle = Mathf.Atan2(GunToMouse.y, GunToMouse.x) * Mathf.Rad2Deg - 90f;
             var angleDelta = (gunAngle - angle) * Time.fixedDeltaTime;
             SetGun(angle + angleDelta, angleDelta);
-            Debug.Log(gunAngle);
         }
         else
         {

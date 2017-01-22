@@ -212,7 +212,6 @@ public class GameManager : MonoBehaviour {
 
                     TurnPhase = TurnPhaseType.EndOfRound;
                     timer = RoundEndDelay;
-                    Debug.Log("GameManager: End Of Turn");
                 }
                 else
                 {
