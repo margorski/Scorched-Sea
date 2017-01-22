@@ -163,7 +163,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: fc8638dd6a3f4d6458acafc1efa2631a, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.15
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -292,3 +292,8 @@ MonoBehaviour:
   SoundPlayer: {fileID: 0}
   currentPlayer: -1
   winPlayer: -1
+  DroneSpawner: {fileID: 0}
+  CamMode: 0
+  BoatBehavior: 0
+  PMode: 0
+  DefenseScore: 0
