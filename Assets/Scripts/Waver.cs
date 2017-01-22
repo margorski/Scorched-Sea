@@ -208,15 +208,15 @@ public class Wave
     private readonly float[] LastTimeUpdate = new float[resolution];
     private float LastTimeTimestamp = 0f;
     private const int resolution = (right - left) * resolutionFactor + 1;
-    private const int resolutionFactor = 10;
+    private const int resolutionFactor = 15;
     private const int left = -10;
     private const int right = 10;
-    private const float TimeResolution = 0.1f;
+    private const float TimeResolution = 0.05f;
 
     public float GetY(float x, float currentTime)
     {
         if (State == WaveState.Dead) return 0f;
-        var index = Mathf.Clamp(Mathf.RoundToInt((x - left) * (float)resolutionFactor), 0, resolution - 1);
+        var index = Mathf.Clamp(Mathf.RoundToInt((x - (float)left) * (float)resolutionFactor), 0, resolution - 1);
         if (Mathf.Abs(currentTime - LastTimeTimestamp) < TimeResolution)
         {
             return LastTimeUpdate[index];
@@ -231,7 +231,7 @@ public class Wave
     {
         for (int index = 0; index < resolution; index++)
         {
-            float x = (float)index / (float)resolutionFactor + left;
+            float x = (float)index / (float)resolutionFactor + (float)left;
             LastTimeTimestamp = currentTime;
             var omegaT = Mathf.Deg2Rad * (currentTime * Pindol200);
             var kaIks = Mathf.Deg2Rad * ((x + DegreesPhase) * Frequency);
@@ -240,6 +240,7 @@ public class Wave
                 var standingMain = StandingWaveCoeff < Mathf.Epsilon ? 1f : Mathf.Cos(kaIks / StandingWaveCoeff + omegaT);
                 var returnValue = Mathf.Sin(kaIks + omegaT) * standingMain * MainAmplitude;
                 LastTimeUpdate[index] = returnValue;
+                continue;
             }
 
             var standing = StandingWaveCoeff < Mathf.Epsilon ? 1f : -Mathf.Sin(kaIks / StandingWaveCoeff + omegaT);
@@ -254,6 +255,7 @@ public class Wave
                 {
                     State = WaveState.Dead;
                     LastTimeUpdate[index] = 0f;
+                    continue;
                 }
                 if (State == WaveState.Dying)
                 {
