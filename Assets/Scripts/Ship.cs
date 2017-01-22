@@ -12,7 +12,8 @@ public class Ship : MonoBehaviour, IHitable {
     public enum Weapons
     {
         Blast,
-        Storm
+        Storm,
+        Armageddon
     }
 
     delegate void Destroy();
@@ -284,8 +285,18 @@ public class Ship : MonoBehaviour, IHitable {
                 break;
             case GunState.Fired:
             	ofDeck.SetPosition(1, startPowerBarPosition);
-                Bullet bullet = Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f,0.1f,0f)), gun.transform.rotation) as Bullet;
-                bullet.Shoot(power, angle, Weapon);
+
+                List<Bullet> allBulets = new List<Bullet>();
+                allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
+                allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
+                allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
+                allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
+                allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
+
+                allBulets.ForEach(x => x.Shoot(Random.Range(10,13), Random.Range(-50,50), Weapon));
+
+               // Bullet bullet = Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f,0.1f,0f)), gun.transform.rotation) as Bullet;
+               // bullet.Shoot(power, angle, Weapon);
                 GameManager.Instance.NextPhase();
                 power = _minPower;
                 _gunState = GunState.Aiming;
