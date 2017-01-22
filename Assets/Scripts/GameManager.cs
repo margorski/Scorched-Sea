@@ -268,6 +268,7 @@ public class GameManager : MonoBehaviour {
         foreach (Ship player in Players)
         {
             player.gameObject.SetActive(true);
+            player.ArmageddonShot = 1;
         }
 
         startPlayer = currentPlayer = Random.Range(0, Players.Count);

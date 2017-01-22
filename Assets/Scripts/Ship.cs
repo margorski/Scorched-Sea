@@ -30,7 +30,7 @@ public class Ship : MonoBehaviour, IHitable {
     public float _minPower, _maxPower;
     public int death = 0;
     public int kill = 0;
-    private int ArmageddonShot = 1;
+    public int ArmageddonShot = 1;
     public float clampMin, clampMax;
     public Bullet bullets;
     public bool FocusCamera = false;
@@ -306,6 +306,8 @@ public class Ship : MonoBehaviour, IHitable {
                 {
                     ArmageddonShots();
                     ArmageddonShot = 0;
+                    Weapon = Weapons.Blast;
+                    Hud.Instance.SelectWeapon(GameManager.Instance.currentPlayer, Weapon);
                 }
                 else
                 {
