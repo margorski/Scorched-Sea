@@ -247,6 +247,10 @@ public class GameManager : MonoBehaviour {
         {
             Waver.Instance.Init(5);
         }
+        if (Input.GetKey(KeyCode.Alpha6))
+        {
+            Waver.Instance.Init(6);
+        }
     }
 
     private void SetSound()

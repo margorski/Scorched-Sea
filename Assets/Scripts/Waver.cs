@@ -74,6 +74,14 @@ public class Waver : MonoBehaviour {
             new Wave(0.8f, 120f, 50f, 10f, 0f, 10, 0.1f, 4f),
             new Wave(0.8f, 120f, 55f, 10f, 0f, 10, 0.1f, 5f),
         },
+        new List<Wave>()
+        {   new Wave(0.5f, 45f, 0f, 10f, 0f), //main
+            new Wave(1.8f, 60f * 4f, -60f, 15f, 0f, -1, 1f, -1f),
+            new Wave(2.0f, 50f * 4f, 0f, 35f, 0f, -1, 1f, -0.5f),
+            new Wave(2.8f, 40f * 4f, 0f, 45f, 0f, -1, 1f, 0f),
+            new Wave(2.0f, 50f * 4f, 0f, 35f, 0f, -1, 1f, 0.5f),
+            new Wave(1.8f, 60f * 4f, 60f, 15f, 0f, -1, 1f, 1f),
+        },
     };
 
     private void LoadLevel(int levelIndex)
