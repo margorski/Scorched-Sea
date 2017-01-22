@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface Ihitable
+public interface IHitable
 {
     void Die();
 }
 
-public class Ship : MonoBehaviour, Ihitable {
+public class Ship : MonoBehaviour, IHitable {
 
     public enum Weapons
     {
@@ -138,9 +138,13 @@ public class Ship : MonoBehaviour, Ihitable {
         destroyAll += DestroyElementsLeft;
         destroyAll += DestroyElementsRight;
         destroyAll += DestroyElementsUp;
-        var indexOfPlayer = GameManager.Instance.Players.IndexOf(this);
-        if (indexOfPlayer != -1)
-            Hud.Instance.SelectWeapon(indexOfPlayer, Weapon);
+        if (GameManager.Instance.PMode == GameManager.PlayMode.Versus)
+        {
+            var indexOfPlayer = GameManager.Instance.Players.IndexOf(this);
+            if (indexOfPlayer != -1)
+                Hud.Instance.SelectWeapon(indexOfPlayer, Weapon);
+        }
+        else Hud.Instance.SelectWeapon(0, Weapon);
     }
 
     private bool fireButtonPressed = false;
@@ -152,14 +156,13 @@ public class Ship : MonoBehaviour, Ihitable {
     private float _boatVelocity = 0f;
 	// Update is called once per frame
 	void FixedUpdate () {
-            if (_isDead)
-            {
-                destroyAll();
-                Invoke("DeadAll", 1.5f);
-                return;
-            }
+        if (_isDead)
+        {
+            destroyAll();
+            Invoke("DeadAll", 1.5f);
+            return;
+        }
 
-       
         float boatAngle;
         var boatY = Waver.Instance.GetY(transform.position.x, out boatAngle);
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, boatAngle);
@@ -170,7 +173,7 @@ public class Ship : MonoBehaviour, Ihitable {
             _boatVelocity -= _boatVelocity * Time.fixedDeltaTime;
             if (Mathf.Abs(_boatVelocity) <= 0.001f) _boatVelocity = 0f;
             _boatVelocity = Mathf.Clamp(_boatVelocity, -0.15f, 0.15f);
-            var deltaX = Mathf.Cos(Mathf.Deg2Rad * angle) * _boatVelocity * Time.fixedDeltaTime;
+            var deltaX = Mathf.Cos(Mathf.Deg2Rad * boatAngle) * _boatVelocity * Time.fixedDeltaTime;
             newX = Mathf.Clamp(newX + deltaX, -6f, 6f);
         }
         transform.position = new Vector3(newX, boatY, transform.position.z);
@@ -178,8 +181,9 @@ public class Ship : MonoBehaviour, Ihitable {
         if (GameManager.Instance.CamMode == GameManager.CameraMode.Stabilized && FocusCamera)
             Camera.main.transform.eulerAngles = transform.eulerAngles;
 
-        if (GameManager.Instance.GetCurrentPlayer() != this
-             || GameManager.Instance.TurnPhase != GameManager.TurnPhaseType.PlayerMove)
+        if (GameManager.Instance.PMode == GameManager.PlayMode.Versus &&
+            (GameManager.Instance.GetCurrentPlayer() != this
+             || GameManager.Instance.TurnPhase != GameManager.TurnPhaseType.PlayerMove))
         {
             return;
         }
@@ -188,10 +192,10 @@ public class Ship : MonoBehaviour, Ihitable {
         GunAction();
     }
 
-
     public void Die()
     {
         _isDead = true;
+        GameManager.Instance.SoundPlayer.PlayExplosion();
     }
 
 
@@ -202,7 +206,15 @@ public class Ship : MonoBehaviour, Ihitable {
             if (Weapon == Weapons.Blast)
                 Weapon = Weapons.Storm;
             else Weapon = Weapons.Blast;
-            Hud.Instance.SelectWeapon(GameManager.Instance.currentPlayer, Weapon);
+            if (GameManager.Instance.PMode == GameManager.PlayMode.WaveDefense)
+            {
+                Hud.Instance.SelectWeapon(0, Weapon);
+            }
+            else
+            {
+                Hud.Instance.SelectWeapon(GameManager.Instance.currentPlayer, Weapon);
+            }
+            
         }
     }
 
@@ -308,7 +320,8 @@ public class Ship : MonoBehaviour, Ihitable {
     void DeadAll()
     {
         Destroy(gameObject);
-        GameManager.Instance.Players[GameManager.Instance.Players.IndexOf(this)] = null;
+        if(GameManager.Instance.Players.IndexOf(this) != -1)
+            GameManager.Instance.Players[GameManager.Instance.Players.IndexOf(this)] = null;
        // gameObject.SetActive(false);
     }
 }

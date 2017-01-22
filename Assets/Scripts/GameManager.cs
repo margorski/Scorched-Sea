@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour {
     private float timer;
     private AudioSource backgroundNoise;
 
+    public Spawner DroneSpawner;
+
     public enum CameraMode
     {
          Normal,
@@ -44,8 +46,14 @@ public class GameManager : MonoBehaviour {
         Static,
         Drifting
     }
-
     public BoatPosition BoatBehavior = BoatPosition.Static;
+
+    public enum PlayMode
+    {
+        Versus,
+        WaveDefense
+    };
+    public PlayMode PMode = GameManager.PlayMode.Versus;
 
     public struct Stats {
         public int kills;
@@ -88,8 +96,9 @@ public class GameManager : MonoBehaviour {
 	void Start () {
         InitRound();
 	}
-	
 
+    private Ship _defensePlayer;
+    public int DefenseScore;
 
 	// Update is called once per frame
 	void Update () {
@@ -108,14 +117,66 @@ public class GameManager : MonoBehaviour {
             Players.ForEach(x => x.BoatSwims = (BoatBehavior == BoatPosition.Drifting));
         }
 
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            PMode = PMode == PlayMode.Versus ? PlayMode.WaveDefense : PlayMode.Versus;
+            if (PMode == PlayMode.WaveDefense)
+            {
+                EndVersusMode();
+                StartWaveDefense();
+            }
+            if (PMode == PlayMode.Versus)
+            {
+                EndWaveDefense();
+                InitPlayers();
+                InitRound();
+                Hud.Instance.SetPlayerTextEnabled(0, true);
+                Hud.Instance.SetPlayerTextEnabled(1, true);
+            }
+        }
+    }
+
+    private Spawner DroneSpawnerInstance = null;
+
+    public void EndVersusMode()
+    {
+        Players.ForEach(x => x.Die());
+        Players.Clear();
+    }
+
+    public void StartWaveDefense()
+    {
+        if (DroneSpawnerInstance == null)
+        {
+            DroneSpawnerInstance = Instantiate(DroneSpawner).GetComponent<Spawner>();
+        }
+        DroneSpawnerInstance.StartSpawning();
+        var xStart = -Random.Range(SpawnMinX, SpawnMaxX);
+        var newShip = Instantiate(ShipPrefab);
+        newShip.transform.position = new Vector3(xStart, Waver.Instance.GetY(xStart), 0f);
+        _defensePlayer = newShip.GetComponent<Ship>();
+        _defensePlayer.FocusCamera = true;
+        DefenseScore = 0;
+        Hud.Instance.SelectPlayer(0);
+        Hud.Instance.SetPlayerTextEnabled(1,false);
+    }
+
+    public void EndWaveDefense()
+    {
+        DefenseScore = 0;
+        Destroy(_defensePlayer.gameObject);
+        DroneSpawnerInstance.DestroySpawns();
+        Destroy(DroneSpawnerInstance);
     }
 
     private void FixedUpdate()
     {
         SetSound();
-        if (TurnPhase == TurnPhaseType.PlayerMove)
+        ChangeLevel();
+
+        if (PMode == PlayMode.WaveDefense && _defensePlayer == null)
         {
-            ChangeLevel();
+            StartWaveDefense();
             return;
         }
         if (TurnPhase == TurnPhaseType.EndOfTurn || TurnPhase == TurnPhaseType.EndOfRound)
@@ -130,6 +191,7 @@ public class GameManager : MonoBehaviour {
 
     public void NextPhase()
     {
+        if (PMode == PlayMode.WaveDefense) return;
         switch (TurnPhase)
         {
             case TurnPhaseType.PlayerMove:
@@ -185,19 +247,24 @@ public class GameManager : MonoBehaviour {
 
     private void InitPlayers()
     {
+        if (Players.Count < 2)
+        {
+            Players.Add(null);
+            Players.Add(null);
+        }
         for(int i = 0; i < 2; i++)
         {
             if (Players[i] == null)
             {
                 Players[i] = Instantiate(ShipPrefab.GetComponent<Ship>());
-              //  Instantiate(ShipPrefab);
+                Hud.Instance.SelectWeapon(i, Players[i].Weapon);
+                //  Instantiate(ShipPrefab);
             }
         }
         var x1 = -Random.Range(SpawnMinX, SpawnMaxX);
         Players[0].gameObject.transform.position = new Vector3(x1, Waver.Instance.GetY(x1), 1.0f);
         var x2 = Random.Range(SpawnMinX, SpawnMaxX);
         Players[1].gameObject.transform.position = new Vector3(x2, Waver.Instance.GetY(x2), 1.0f);
-
 
         foreach (Ship player in Players)
         {
@@ -241,9 +308,16 @@ public class GameManager : MonoBehaviour {
 
     public Ship GetCurrentPlayer()
     {
-        if (currentPlayer == -1)
-            return null;
-        return Players[currentPlayer];
+        switch (PMode)
+        {
+            case PlayMode.Versus:
+                if (currentPlayer == -1)
+                    return null;
+                return Players[currentPlayer];
+            case PlayMode.WaveDefense:
+                return _defensePlayer;
+        }
+        return null;
     }
 
     private void RandomizeWind()

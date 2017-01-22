@@ -71,6 +71,12 @@ public class Hud : MonoBehaviour {
     private void FixedUpdate()
     {
         DrawWindArrow();
+        if (GameManager.Instance.PMode == GameManager.PlayMode.WaveDefense)
+        {
+            player1Name.text = "Hiro";
+            player1Stats.text = "Score: " + GameManager.Instance.DefenseScore;
+            return;
+        }
         if (GameManager.Instance.Players[0] != null)
         {
             player1Name.text = GameManager.Instance.playerStats[0].name;
@@ -116,6 +122,24 @@ public class Hud : MonoBehaviour {
                 player2Weapon1.CrossFadeAlpha(0.1f, 0.7f, false);
                 player2Weapon2.CrossFadeAlpha(1.0f, 0.7f, false);
             }
+        }
+    }
+
+    public void SetPlayerTextEnabled(int player, bool enabled)
+    {
+        if (player == 0)
+        {
+            player1Name.enabled = enabled;
+            player1Stats.enabled = enabled;
+            player1Weapon1.enabled = enabled;
+            player1Weapon2.enabled = enabled;
+        }
+        else
+        {
+            player2Name.enabled = enabled;
+            player2Stats.enabled = enabled;
+            player2Weapon1.enabled = enabled;
+            player2Weapon2.enabled = enabled;
         }
     }
 

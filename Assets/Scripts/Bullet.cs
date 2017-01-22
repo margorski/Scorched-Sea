@@ -56,9 +56,8 @@ public class Bullet : MonoBehaviour {
                 Instantiate(ExplosionPrefab, transform.position, transform.rotation);
                 GameManager.Instance.SoundPlayer.PlayHit();
             }
-            collision.gameObject.GetComponent<Ship>().Die();
+            collision.gameObject.GetComponent<IHitable>().Die();
             Die();
-            GameManager.Instance.SoundPlayer.PlayExplosion();
         }
     }
 

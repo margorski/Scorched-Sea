@@ -18,8 +18,7 @@ public class ExplosionRay : MonoBehaviour {
     {
         if (collider.gameObject.CompareTag("Ship"))
         {
-            collider.gameObject.GetComponent<Ship>().Die();
-            GameManager.Instance.SoundPlayer.PlayExplosion();
+            collider.gameObject.GetComponent<IHitable>().Die();
         }
     }
 }
