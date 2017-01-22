@@ -32,6 +32,7 @@ public class Ship : MonoBehaviour, Ihitable {
     public float clampMin, clampMax;
     public Bullet bullets;
     public bool FocusCamera = false;
+    public bool BoatSwims = false;
     Transform gun;
     List<Transform> allElements;
 
@@ -86,6 +87,12 @@ public class Ship : MonoBehaviour, Ihitable {
             }
         }
     }
+
+    void Start()
+    {
+        BoatSwims = GameManager.Instance.BoatBehavior == GameManager.BoatPosition.Drifting;
+    }
+
     // Use this for initialization
     void Awake () {
 
@@ -141,7 +148,8 @@ public class Ship : MonoBehaviour, Ihitable {
     {
         fireButtonPressed = Input.GetButton("Fire1");
     }
-	
+
+    private float _boatVelocity = 0f;
 	// Update is called once per frame
 	void FixedUpdate () {
             if (_isDead)
@@ -153,10 +161,21 @@ public class Ship : MonoBehaviour, Ihitable {
 
        
         float boatAngle;
-        transform.position = new Vector3(transform.position.x, Waver.Instance.GetY(transform.position.x, out boatAngle), transform.position.z);
-
+        var boatY = Waver.Instance.GetY(transform.position.x, out boatAngle);
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, boatAngle);
-        if(GameManager.Instance.CamMode == GameManager.CameraMode.Stabilized && FocusCamera)
+        float newX = transform.position.x;
+        if (BoatSwims)
+        {
+            _boatVelocity += -boatAngle * 0.05f * Time.fixedDeltaTime; // speed from 
+            _boatVelocity -= _boatVelocity * Time.fixedDeltaTime;
+            if (Mathf.Abs(_boatVelocity) <= 0.001f) _boatVelocity = 0f;
+            _boatVelocity = Mathf.Clamp(_boatVelocity, -0.15f, 0.15f);
+            var deltaX = Mathf.Cos(Mathf.Deg2Rad * angle) * _boatVelocity * Time.fixedDeltaTime;
+            newX = Mathf.Clamp(newX + deltaX, -6f, 6f);
+        }
+        transform.position = new Vector3(newX, boatY, transform.position.z);
+
+        if (GameManager.Instance.CamMode == GameManager.CameraMode.Stabilized && FocusCamera)
             Camera.main.transform.eulerAngles = transform.eulerAngles;
 
         if (GameManager.Instance.GetCurrentPlayer() != this

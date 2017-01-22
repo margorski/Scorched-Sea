@@ -39,6 +39,14 @@ public class GameManager : MonoBehaviour {
     };
     public CameraMode CamMode = CameraMode.Normal;
 
+    public enum BoatPosition
+    {
+        Static,
+        Drifting
+    }
+
+    public BoatPosition BoatBehavior = BoatPosition.Static;
+
     public struct Stats {
         public int kills;
         public int deaths;
@@ -93,7 +101,14 @@ public class GameManager : MonoBehaviour {
                 Camera.main.transform.eulerAngles = Vector3.zero;
             }
         }
-	}
+
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            BoatBehavior = BoatBehavior == BoatPosition.Static ? BoatPosition.Drifting : BoatPosition.Static;
+            Players.ForEach(x => x.BoatSwims = (BoatBehavior == BoatPosition.Drifting));
+        }
+
+    }
 
     private void FixedUpdate()
     {
