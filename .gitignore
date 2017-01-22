@@ -325,3 +325,5 @@ build/
 *.swp
 *.exe
 ScorchedSea_Data
+
+*.zip
