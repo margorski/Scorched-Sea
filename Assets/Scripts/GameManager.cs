@@ -32,6 +32,13 @@ public class GameManager : MonoBehaviour {
     private float timer;
     private AudioSource backgroundNoise;
 
+    public enum CameraMode
+    {
+         Normal,
+         Stabilized
+    };
+    public CameraMode CamMode = CameraMode.Normal;
+
     public struct Stats {
         public int kills;
         public int deaths;
@@ -78,7 +85,14 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            CamMode = CamMode == CameraMode.Normal ? CameraMode.Stabilized : CameraMode.Normal;
+            if (CamMode == CameraMode.Normal)
+            {
+                Camera.main.transform.eulerAngles = Vector3.zero;
+            }
+        }
 	}
 
     private void FixedUpdate()
@@ -149,6 +163,8 @@ public class GameManager : MonoBehaviour {
         // randomize wave
         InitPlayers();
         Hud.Instance.SelectPlayer(currentPlayer);
+        foreach (var player in Players) player.FocusCamera = false;
+        Players[currentPlayer].FocusCamera = true;
         TurnPhase = TurnPhaseType.PlayerMove;
     }
 
@@ -197,6 +213,7 @@ public class GameManager : MonoBehaviour {
 
     private void NextPlayer()
     {
+        Players[currentPlayer].FocusCamera = false;
         currentPlayer++;
         if (currentPlayer >= Players.Count)
         {
@@ -204,6 +221,7 @@ public class GameManager : MonoBehaviour {
         }
         UpdateCurrentDrawing();
         Hud.Instance.SelectPlayer(currentPlayer);
+        Players[currentPlayer].FocusCamera = true;
     }
 
     public Ship GetCurrentPlayer()

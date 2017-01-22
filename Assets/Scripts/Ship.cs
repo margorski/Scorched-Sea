@@ -31,6 +31,7 @@ public class Ship : MonoBehaviour, Ihitable {
     public int kill = 0;
     public float clampMin, clampMax;
     public Bullet bullets;
+    public bool FocusCamera = false;
     Transform gun;
     List<Transform> allElements;
 
@@ -148,7 +149,8 @@ public class Ship : MonoBehaviour, Ihitable {
         transform.position = new Vector3(transform.position.x, Waver.Instance.GetY(transform.position.x, out boatAngle), transform.position.z);
 
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, boatAngle);
-
+        if(GameManager.Instance.CamMode == GameManager.CameraMode.Stabilized && FocusCamera)
+            Camera.main.transform.eulerAngles = transform.eulerAngles;
 
         if (GameManager.Instance.GetCurrentPlayer() != this
              || GameManager.Instance.TurnPhase != GameManager.TurnPhaseType.PlayerMove)
