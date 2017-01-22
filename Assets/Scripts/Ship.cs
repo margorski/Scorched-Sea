@@ -147,10 +147,47 @@ public class Ship : MonoBehaviour, IHitable {
         else Hud.Instance.SelectWeapon(0, Weapon);
     }
 
+    private float _doubleClickInterval = 0.3f;
+    private float _clickTimestamp;
+    private enum MouseClick
+    {
+        None,
+        NotSure,
+        Single,
+        Double
+    }
+    private MouseClick _mouseClick = MouseClick.None;
     private bool fireButtonPressed = false;
     void Update()
     {
         fireButtonPressed = Input.GetButton("Fire1");
+        switch (_mouseClick)
+        {
+            case MouseClick.None:
+                if (Input.GetMouseButtonDown(0))
+                {
+                    _clickTimestamp = Time.time;
+                    _mouseClick = MouseClick.NotSure;
+                }
+                break;
+            case MouseClick.NotSure:
+                if (Input.GetMouseButtonDown(0) && (_clickTimestamp + _doubleClickInterval) > Time.time)
+                {
+                    _mouseClick = MouseClick.Double;
+                }
+                if ((_clickTimestamp + _doubleClickInterval) < Time.time)
+                {
+                    _mouseClick = MouseClick.Single;
+                }
+                break;
+            case MouseClick.Single:
+            case MouseClick.Double:
+                if (Input.GetMouseButton(0) == false)
+                {
+                    _mouseClick = MouseClick.None;
+                }
+                break;
+        }
     }
 
     private float _boatVelocity = 0f;
@@ -227,7 +264,7 @@ public class Ship : MonoBehaviour, IHitable {
                 {
                     GameManager.Instance.SoundPlayer.PlayAim();
                 }
-                if (fireButtonPressed)
+                if (fireButtonPressed || _mouseClick == MouseClick.Double)
                 {
                     _gunState = GunState.AdjustingPower;
                     GameManager.Instance.SoundPlayer.Stop();
@@ -238,7 +275,7 @@ public class Ship : MonoBehaviour, IHitable {
                 power += 0.2f;
                 power = Mathf.Clamp(power, _minPower, _maxPower);
                 ofDeck.SetPosition(1, new Vector3(rendererPosition.x, rendererPosition.y + power/_maxPower * 0.5f, rendererPosition.z));
-                if (fireButtonPressed == false || power == _maxPower)
+                if ((fireButtonPressed == false && _mouseClick == MouseClick.None) || power == _maxPower)
                 {
                     _gunState = GunState.Fired;
                     GameManager.Instance.SoundPlayer.Stop();
@@ -261,9 +298,26 @@ public class Ship : MonoBehaviour, IHitable {
         if (_gunState == GunState.AdjustingPower || _gunState == GunState.Fired)
             return;
 
-        float z = -Input.GetAxisRaw("Horizontal") * speed * Time.fixedDeltaTime;
-        angle += z;
-        angle = Mathf.Clamp(angle, clampMin, clampMax);
+        if (_mouseClick == MouseClick.Single)
+        {
+            var mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePoint.z = 0f;
+            var GunToMouse = mousePoint - gun.position;
+            var gunAngle = Mathf.Atan2(GunToMouse.y, GunToMouse.x) * Mathf.Rad2Deg - 90f;
+            var angleDelta = (gunAngle - angle) * Time.fixedDeltaTime;
+            SetGun(angle + angleDelta, angleDelta);
+            Debug.Log(gunAngle);
+        }
+        else
+        {
+            float z = -Input.GetAxisRaw("Horizontal") * speed * Time.fixedDeltaTime;
+            SetGun(angle + z, z);
+        }
+    }
+
+    private void SetGun(float angleToSet, float z)
+    {
+        angle = Mathf.Clamp(angleToSet, clampMin, clampMax);
         gun.eulerAngles = new Vector3(0, 0, angle);
         GameManager.Instance.SoundPlayer.MovePitch(z);
     }
