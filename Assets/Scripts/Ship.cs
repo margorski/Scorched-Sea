@@ -60,12 +60,19 @@ public class Ship : MonoBehaviour, Ihitable {
             width += 0.03f;
         var colorGreen = Color.green;
         var colorYellow = Color.yellow;
+        var colorRed = Color.red;
+        Color currentColor;
+        //  if (GameManager.Instance.Players.IndexOf(this) == 0)
+        //      currentColor = colorYellow;
+        //  else
+        //     currentColor = colorRed;
+        currentColor = Color.white;
         if(current)
         {
             foreach (var element in allElements)
             {
                 var temp = element.GetComponent<LineRenderer>();
-                temp.endColor = temp.startColor = colorYellow;
+                temp.endColor = temp.startColor = currentColor;
                 temp.endWidth = temp.startWidth = width;
             }
         }
@@ -74,7 +81,7 @@ public class Ship : MonoBehaviour, Ihitable {
             foreach (var element in allElements)
             {
                 var temp = element.GetComponent<LineRenderer>();
-                temp.endColor = temp.startColor = colorGreen;
+                temp.endColor = temp.startColor = currentColor;
                 temp.endWidth = temp.startWidth = width;
             }
         }
