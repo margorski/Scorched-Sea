@@ -415,7 +415,7 @@ public class Ship : MonoBehaviour, IHitable {
         allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
         allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
         allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
-        allBulets.ForEach(x => x.Shoot(Random.Range(10, 13), Random.Range(-50, 50), Weapon));
+        allBulets.ForEach(x => x.Shoot(Random.Range(10, 13), Random.Range(-50, 50), Weapons.Blast));
     }
 
 }
