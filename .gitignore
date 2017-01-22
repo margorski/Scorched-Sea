@@ -323,3 +323,5 @@ build/
 
 *.orig
 *.swp
+*.exe
+ScorchedSea_Data
