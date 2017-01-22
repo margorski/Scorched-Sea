@@ -58,7 +58,7 @@ public class Ship : MonoBehaviour, IHitable {
     {
         var width = 0.02f;
         if (current)
-            width += 0.03f;
+            width += 0.05f;
         var colorGreen = Color.green;
         var colorYellow = Color.yellow;
         var colorRed = Color.red;
