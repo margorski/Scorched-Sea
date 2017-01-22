@@ -30,6 +30,7 @@ public class Ship : MonoBehaviour, IHitable {
     public float _minPower, _maxPower;
     public int death = 0;
     public int kill = 0;
+    private int ArmageddonShot = 1;
     public float clampMin, clampMax;
     public Bullet bullets;
     public bool FocusCamera = false;
@@ -241,9 +242,24 @@ public class Ship : MonoBehaviour, IHitable {
     {
         if(Input.GetKeyDown(KeyCode.Tab))
         {
-            if (Weapon == Weapons.Blast)
-                Weapon = Weapons.Storm;
-            else Weapon = Weapons.Blast;
+            switch(Weapon)
+            {
+                case Weapons.Blast:
+                    Weapon = Weapons.Storm;
+                    break;
+                case Weapons.Storm:
+                    if (ArmageddonShot == 1)
+                        Weapon = Weapons.Armageddon;
+                    else Weapon = Weapons.Blast;
+                    break;
+                case Weapons.Armageddon:
+                    Weapon = Weapons.Blast;
+                    break;
+
+            }
+          //if (Weapon == Weapons.Blast)
+          //      Weapon = Weapons.Storm;
+          //  else Weapon = Weapons.Blast;
             if (GameManager.Instance.PMode == GameManager.PlayMode.WaveDefense)
             {
                 Hud.Instance.SelectWeapon(0, Weapon);
@@ -286,17 +302,17 @@ public class Ship : MonoBehaviour, IHitable {
             case GunState.Fired:
             	ofDeck.SetPosition(1, startPowerBarPosition);
 
-                List<Bullet> allBulets = new List<Bullet>();
-                allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
-                allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
-                allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
-                allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
-                allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
+                if(Weapon == Weapons.Armageddon)
+                {
+                    ArmageddonShots();
+                    ArmageddonShot = 0;
+                }
+                else
+                {
+                    Bullet bullet = Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet;
+                    bullet.Shoot(power, angle, Weapon);
 
-                allBulets.ForEach(x => x.Shoot(Random.Range(10,13), Random.Range(-50,50), Weapon));
-
-               // Bullet bullet = Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f,0.1f,0f)), gun.transform.rotation) as Bullet;
-               // bullet.Shoot(power, angle, Weapon);
+                }
                 GameManager.Instance.NextPhase();
                 power = _minPower;
                 _gunState = GunState.Aiming;
@@ -388,4 +404,16 @@ public class Ship : MonoBehaviour, IHitable {
             GameManager.Instance.Players[GameManager.Instance.Players.IndexOf(this)] = null;
        // gameObject.SetActive(false);
     }
+
+    void ArmageddonShots()
+    {
+        List<Bullet> allBulets = new List<Bullet>();
+        allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
+        allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
+        allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
+        allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
+        allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
+        allBulets.ForEach(x => x.Shoot(Random.Range(10, 13), Random.Range(-50, 50), Weapon));
+    }
+
 }
