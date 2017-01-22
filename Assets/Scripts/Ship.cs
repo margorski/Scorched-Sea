@@ -58,13 +58,14 @@ public class Ship : MonoBehaviour, Ihitable {
         if (current)
             width += 0.03f;
         var colorGreen = Color.green;
-        var colorRed = Color.red;
+        var colorYellow = Color.yellow;
         if(current)
         {
             foreach (var element in allElements)
             {
                 var temp = element.GetComponent<LineRenderer>();
-                temp.endColor = temp.startColor = colorRed;
+                temp.endColor = temp.startColor = colorYellow;
+                temp.endWidth = temp.startWidth = width;
             }
         }
         else
@@ -73,11 +74,9 @@ public class Ship : MonoBehaviour, Ihitable {
             {
                 var temp = element.GetComponent<LineRenderer>();
                 temp.endColor = temp.startColor = colorGreen;
+                temp.endWidth = temp.startWidth = width;
             }
         }
-
-
-
     }
     // Use this for initialization
     void Awake () {
