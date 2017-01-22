@@ -57,19 +57,27 @@ public class Ship : MonoBehaviour, Ihitable {
         var width = 0.02f;
         if (current)
             width += 0.03f;
-        
-        var deckRenderer = _deck.GetComponent<LineRenderer>();
-        deckRenderer.endWidth = deckRenderer.startWidth = width;
-    
-        var leftSideRenderer = _leftSide.GetComponent<LineRenderer>();
-        leftSideRenderer.endWidth = leftSideRenderer.startWidth = width;
+        var colorGreen = Color.green;
+        var colorRed = Color.red;
+        if(current)
+        {
+            foreach (var element in allElements)
+            {
+                var temp = element.GetComponent<LineRenderer>();
+                temp.endColor = temp.startColor = colorRed;
+            }
+        }
+        else
+        {
+            foreach (var element in allElements)
+            {
+                var temp = element.GetComponent<LineRenderer>();
+                temp.endColor = temp.startColor = colorGreen;
+            }
+        }
 
-        var rightSideRenderer = _rightSide.GetComponent<LineRenderer>();
-        rightSideRenderer.endWidth = rightSideRenderer.startWidth = width;
 
 
-        var bottomRenderer = _Bottom.GetComponent<LineRenderer>();
-        bottomRenderer.endWidth = bottomRenderer.startWidth = width;
     }
     // Use this for initialization
     void Awake () {
