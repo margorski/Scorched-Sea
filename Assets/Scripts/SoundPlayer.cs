@@ -54,7 +54,7 @@ public class SoundPlayer : MonoBehaviour {
         audioSource.loop = true;
         audioSource.clip = aimSound;
         audioSource.pitch = -0.1f;
-        audioSource.volume = 0.3f;
+        audioSource.volume = 0.1f;
         audioSource.Play();
     }
 
