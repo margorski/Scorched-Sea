@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class Waver : MonoBehaviour {
+public class Waver : MonoBehaviour
+{
 
     public float MainAmplitude = 3f;
     public float Pindol200 = 45f;    //for 1 -> 1 sec is 1 degree
@@ -45,7 +46,8 @@ public class Waver : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start() {
+    void Start()
+    {
         _currentTurn = GameManager.Instance.TurnCounter;
     }
 
@@ -129,15 +131,17 @@ public class Waver : MonoBehaviour {
     {
         _currentTime = Time.fixedTime;
         _addWaves.RemoveAll(x => x.State == Wave.WaveState.Dead);
+        if (Mathf.Abs(_currentTime - LastTimeTimestamp) > TimeResolution)
+        {
+            Recalc(_currentTime);
+        }
     }
 
     public float GetY(float x)
     {
         if (_mainWave == null) return 0f;
-        return
-            _mainWave.GetY(x, _currentTime) +
-            _addWaves.Sum(wave => wave.GetY(x, _currentTime)) +
-            YOffset;
+        var index = Mathf.Clamp(Mathf.RoundToInt((x - (float)left) * (float)resolutionFactor), 0, resolution - 1);
+        return LastTimeUpdate[index];
     }
 
     public float GetY(float x, out float angle)
@@ -148,6 +152,28 @@ public class Waver : MonoBehaviour {
         var h = GetY(x + delta) - GetY(x - delta);
         angle = Mathf.Atan(h / (2f * delta)) * Mathf.Rad2Deg;
         return GetY(x);
+    }
+
+
+    private readonly float[] LastTimeUpdate = new float[resolution];
+    private float LastTimeTimestamp = 0f;
+    private const int resolution = (right - left) * resolutionFactor + 1;
+    private const int resolutionFactor = 15;
+    private const int left = -10;
+    private const int right = 10;
+    private const float TimeResolution = 0.03f;
+
+    private void Recalc(float currentTime)
+    {
+        for (int index = 0; index < resolution; index++)
+        {
+            float x = (float)index / (float)resolutionFactor + (float)left;
+            LastTimeTimestamp = currentTime;
+            LastTimeUpdate[index] =
+                _mainWave.GetY(x, _currentTime) +
+                _addWaves.Sum(wave => wave.GetY(x, _currentTime)) +
+                YOffset;
+        }
     }
 }
 
@@ -205,77 +231,49 @@ public class Wave
         IsMain = false;
     }
 
-    private readonly float[] LastTimeUpdate = new float[resolution];
-    private float LastTimeTimestamp = 0f;
-    private const int resolution = (right - left) * resolutionFactor + 1;
-    private const int resolutionFactor = 15;
-    private const int left = -10;
-    private const int right = 10;
-    private const float TimeResolution = 0.05f;
 
     public float GetY(float x, float currentTime)
     {
         if (State == WaveState.Dead) return 0f;
-        var index = Mathf.Clamp(Mathf.RoundToInt((x - (float)left) * (float)resolutionFactor), 0, resolution - 1);
-        if (Mathf.Abs(currentTime - LastTimeTimestamp) < TimeResolution)
+        var omegaT = Mathf.Deg2Rad * (currentTime * Pindol200);
+        var kaIks = Mathf.Deg2Rad * ((x + DegreesPhase) * Frequency);
+        if (IsMain)
         {
-            return LastTimeUpdate[index];
+            var standingMain = StandingWaveCoeff < Mathf.Epsilon ? 1f : Mathf.Cos(kaIks / StandingWaveCoeff + omegaT);
+            return Mathf.Sin(kaIks + omegaT) * standingMain * MainAmplitude;
         }
-        else
-        {
-            Recalc(currentTime);
-            return LastTimeUpdate[index];
-        }
-    }
-    private void Recalc(float currentTime)
-    {
-        for (int index = 0; index < resolution; index++)
-        {
-            float x = (float)index / (float)resolutionFactor + (float)left;
-            LastTimeTimestamp = currentTime;
-            var omegaT = Mathf.Deg2Rad * (currentTime * Pindol200);
-            var kaIks = Mathf.Deg2Rad * ((x + DegreesPhase) * Frequency);
-            if (IsMain)
-            {
-                var standingMain = StandingWaveCoeff < Mathf.Epsilon ? 1f : Mathf.Cos(kaIks / StandingWaveCoeff + omegaT);
-                var returnValue = Mathf.Sin(kaIks + omegaT) * standingMain * MainAmplitude;
-                LastTimeUpdate[index] = returnValue;
-                continue;
-            }
 
-            var standing = StandingWaveCoeff < Mathf.Epsilon ? 1f : -Mathf.Sin(kaIks / StandingWaveCoeff + omegaT);
-            float howFar = Mathf.Abs(WorldXEpicenter - x);
-            var y = Mathf.Pow(2.71828f, -howFar * DampingFactor) * Mathf.Cos(kaIks + omegaT) * standing * MainAmplitude;
-            var turnDelta = 0f;
-            if (State == WaveState.Dying || State == WaveState.Damping)
+        var standing = StandingWaveCoeff < Mathf.Epsilon ? 1f : -Mathf.Sin(kaIks / StandingWaveCoeff + omegaT);
+        float howFar = Mathf.Abs(WorldXEpicenter - x);
+        var y = Mathf.Pow(2.71828f, -howFar * DampingFactor) * Mathf.Cos(kaIks + omegaT) * standing * MainAmplitude;
+        var turnDelta = 0f;
+        if (State == WaveState.Dying || State == WaveState.Damping)
+        {
+            var timeDelta = Time.time - _transitionTimestamp;
+            var timeDeltaScale = 1f - (timeDelta) / TransitionTime;
+            if (State == WaveState.Dying && timeDelta > TransitionTime)
             {
-                var timeDelta = Time.time - _transitionTimestamp;
-                var timeDeltaScale = 1f - (timeDelta) / TransitionTime;
-                if (State == WaveState.Dying && timeDelta > TransitionTime)
-                {
-                    State = WaveState.Dead;
-                    LastTimeUpdate[index] = 0f;
-                    continue;
-                }
-                if (State == WaveState.Dying)
-                {
-                    y *= timeDeltaScale / (float)TurnsActive;
-                }
-                if (State == WaveState.Damping && timeDelta > TransitionTime)
-                {
-                    State = Wave.WaveState.Awake;
-                }
-                else
-                {
-                    turnDelta = timeDeltaScale / TurnsActive;
-                }
+                State = WaveState.Dead;
+                return 0f;
             }
-            if (TurnsActive != -1 && IsActive)
+            if (State == WaveState.Dying)
             {
-                y *= (TurnsActive - CurrentTurnActive + 1) / (float)TurnsActive + turnDelta;
+                y *= timeDeltaScale / (float)TurnsActive;
             }
-            LastTimeUpdate[index] = y;
+            if (State == WaveState.Damping && timeDelta > TransitionTime)
+            {
+                State = Wave.WaveState.Awake;
+            }
+            else
+            {
+                turnDelta = timeDeltaScale / TurnsActive;
+            }
         }
+        if (TurnsActive != -1 && IsActive)
+        {
+            y *= (TurnsActive - CurrentTurnActive + 1) / (float)TurnsActive + turnDelta;
+        }
+        return y;
     }
 
     public void DieOut()
