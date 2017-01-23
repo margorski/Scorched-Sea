@@ -14,10 +14,12 @@ public class Hud : MonoBehaviour {
     private Text player1Stats;
     private Text player1Weapon1;
     private Text player1Weapon2;
+    private Text player1Weapon3;
     private Text player2Name;
     private Text player2Stats;
     private Text player2Weapon1;
     private Text player2Weapon2;
+    private Text player2Weapon3;
     private Text WinMessage;
     private static Hud instance = null;
 
@@ -51,10 +53,12 @@ public class Hud : MonoBehaviour {
         player1Stats = transform.FindChild("Player1Info/Statistics").gameObject.GetComponent<Text>();
         player1Weapon1 = transform.FindChild("Player1Info/Weapons/Weapon1Name").gameObject.GetComponent<Text>();
         player1Weapon2 = transform.FindChild("Player1Info/Weapons/Weapon2Name").gameObject.GetComponent<Text>();
+        player1Weapon3 = transform.FindChild("Player1Info/Weapons/Weapon3Name").gameObject.GetComponent<Text>();
         player2Name = transform.FindChild("Player2Info/Name").gameObject.GetComponent<Text>();
         player2Stats = transform.FindChild("Player2Info/Statistics").gameObject.GetComponent<Text>();
         player2Weapon1 = transform.FindChild("Player2Info/Weapons/Weapon1Name").gameObject.GetComponent<Text>();
         player2Weapon2 = transform.FindChild("Player2Info/Weapons/Weapon2Name").gameObject.GetComponent<Text>();
+        player2Weapon3 = transform.FindChild("Player2Info/Weapons/Weapon3Name").gameObject.GetComponent<Text>();
         WinMessage = transform.FindChild("WinMsg").gameObject.GetComponent<Text>(); ;
         WinMessage.enabled = false;
         SelectWeapon(0, Ship.Weapons.Blast);
@@ -103,11 +107,19 @@ public class Hud : MonoBehaviour {
             {
                 player1Weapon1.CrossFadeAlpha(1.0f, 0.7f, false);
                 player1Weapon2.CrossFadeAlpha(0.1f, 0.7f, false);
+                player1Weapon3.CrossFadeAlpha(0.1f, 0.7f, false);
+            }
+            else if (weaponType == Ship.Weapons.Storm)
+            {
+                player1Weapon1.CrossFadeAlpha(0.1f, 0.7f, false);
+                player1Weapon2.CrossFadeAlpha(1.0f, 0.7f, false);
+                player1Weapon3.CrossFadeAlpha(0.1f, 0.7f, false);
             }
             else
             {
                 player1Weapon1.CrossFadeAlpha(0.1f, 0.7f, false);
-                player1Weapon2.CrossFadeAlpha(1.0f, 0.7f, false);
+                player1Weapon2.CrossFadeAlpha(0.1f, 0.7f, false);
+                player1Weapon3.CrossFadeAlpha(1.0f, 0.7f, false);
             }
         }
         if (playerNumber == 1)
@@ -116,11 +128,19 @@ public class Hud : MonoBehaviour {
             {
                 player2Weapon1.CrossFadeAlpha(1.0f, 0.7f, false);
                 player2Weapon2.CrossFadeAlpha(0.1f, 0.7f, false);
+                player2Weapon3.CrossFadeAlpha(0.1f, 0.7f, false);
+            }
+            else if (weaponType == Ship.Weapons.Storm)
+            {
+                player2Weapon1.CrossFadeAlpha(0.1f, 0.7f, false);
+                player2Weapon2.CrossFadeAlpha(1.0f, 0.7f, false);
+                player2Weapon3.CrossFadeAlpha(0.1f, 0.7f, false);
             }
             else
             {
                 player2Weapon1.CrossFadeAlpha(0.1f, 0.7f, false);
-                player2Weapon2.CrossFadeAlpha(1.0f, 0.7f, false);
+                player2Weapon2.CrossFadeAlpha(0.1f, 0.7f, false);
+                player2Weapon3.CrossFadeAlpha(1.0f, 0.7f, false);
             }
         }
     }
