@@ -54,7 +54,7 @@ internal class VersusGameMode : IGameMode
     public static int NumberOfPlayers = 2;
     public readonly Dictionary<Player, ShipShooter> Players = new Dictionary<Player, ShipShooter>(new PlayerEqComp());
 
-    public int SpawnMinX = 2;
+    public int SpawnMinX = 5;
     public int SpawnMaxX = 7;
     public int PlayerInControl = 0;
     public TurnPhaseType TurnPhase = TurnPhaseType.PlayerMove;

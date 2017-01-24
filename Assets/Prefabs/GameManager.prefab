@@ -282,7 +282,7 @@ MonoBehaviour:
   SpawnablePrefabs:
   - type: 0
     prefab: {fileID: 1683569868162568, guid: 80aa7b5b50407194aad2d86158b0f947, type: 2}
-  - type: 1
+  - type: 2
     prefab: {fileID: 1755052695346640, guid: a60a5bdded58def46ae81d05ed263941, type: 2}
   - type: 1
     prefab: {fileID: 1843926940116132, guid: 726e4b12be311a946a59a9acaa1e23b5, type: 2}

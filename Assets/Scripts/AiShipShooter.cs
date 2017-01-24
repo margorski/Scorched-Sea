@@ -39,7 +39,7 @@ public class AiShipShooter : ShipShooter {
     protected override void OnCurrentSetActive(bool isActive)
     {
         player = FindObjectOfType<Ship>().gameObject;
-        aim = Random.Range(15f, 30f);
+        aim = Random.Range(22f, 35f);
         if(isActive) Invoke("StartShooting", 2f);
     }
 
@@ -47,7 +47,7 @@ public class AiShipShooter : ShipShooter {
     private void StartShooting()
     {
         _firePressed = true;
-        Invoke("StopShooting", 0.7f + Random.Range(-0.05f, 0.05f));
+        Invoke("StopShooting", 0.8f + Random.Range(-0.07f, 0.07f));
     }
     private void StopShooting()
     {
