@@ -22,10 +22,10 @@ public interface IGameMode
     void OnShipFired();
 
     void EnemyDestroyed(EnemyType type);
-    void PlayerDied(Ship player);
+    void PlayerDied(ShipShooter player);
 
-    Ship CurrentlyPlayingShip();
-    List<Ship> GetAllPlayerShips();
+    ShipShooter CurrentlyPlayingShip();
+    List<ShipShooter> GetAllPlayerShips();
 }
 
 public class GameManager : MonoBehaviour {
@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour {
     public enum Spawnables
     {
         PlayerShip,
+        AiShip,
         DroneShipSpawner,
     }
 
@@ -46,7 +47,6 @@ public class GameManager : MonoBehaviour {
     }
 
     public List<SpawnableEntry> SpawnablePrefabs;
-    public GameObject ShipPrefab;
     public float WindForce;
     public float MinWind;
     public float MaxWind;

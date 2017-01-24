@@ -13,6 +13,7 @@ internal class Player
     public int Wins = 0;
     public int Loses = 0;
     public int index;
+    public bool IsAi = false;
 
     public Player(int i) { index = i; Name = "Player" + i; }
 
@@ -51,7 +52,7 @@ public enum TurnPhaseType
 internal class VersusGameMode : IGameMode
 {
     public static int NumberOfPlayers = 2;
-    public readonly Dictionary<Player, Ship> Players = new Dictionary<Player, Ship>(new PlayerEqComp());
+    public readonly Dictionary<Player, ShipShooter> Players = new Dictionary<Player, ShipShooter>(new PlayerEqComp());
 
     public int SpawnMinX = 2;
     public int SpawnMaxX = 7;
@@ -97,7 +98,7 @@ internal class VersusGameMode : IGameMode
         Hud.Instance.SetPlayerTextEnabled(1, true);
     }
 
-    public Ship CurrentlyPlayingShip()
+    public ShipShooter CurrentlyPlayingShip()
     {
         if(Players.ContainsKey(PlayerInControl)) return Players[PlayerInControl];
         return null;
@@ -113,7 +114,7 @@ internal class VersusGameMode : IGameMode
         NextPhase();
     }
 
-    public List<Ship> GetAllPlayerShips()
+    public List<ShipShooter> GetAllPlayerShips()
     {
         return Players.Values.Where(x => x != null).ToList();
     }
@@ -122,7 +123,7 @@ internal class VersusGameMode : IGameMode
     {
     }
 
-    public void PlayerDied(Ship player)
+    public void PlayerDied(ShipShooter player)
     {
     }
 
@@ -160,6 +161,7 @@ internal class VersusGameMode : IGameMode
             Players.Add(player, null);
             Hud.Instance.UpdateScores(player.index, player.Wins, player.Loses);
         }
+        Players.Keys.First().IsAi = true;
         PlayerInControl = Mathf.RoundToInt(URandom.Range(1, Players.Count));
     }
 
@@ -169,7 +171,9 @@ internal class VersusGameMode : IGameMode
         
         foreach(var player in Players.Where(x => x.Value == null).ToArray())
         {
-            var ship = GameManager.Instance.InstantiateRelay(GameManager.Spawnables.PlayerShip).GetComponent<Ship>();
+            var spawnable = GameManager.Spawnables.PlayerShip;
+            if (player.Key.IsAi) spawnable = GameManager.Spawnables.AiShip;
+            var ship = GameManager.Instance.InstantiateRelay(spawnable).GetComponent<ShipShooter>();
             Players[player.Key] = ship;
             Hud.Instance.SelectWeapon(player.Key.index, ship.Weapon);
             ship.gameObject.transform.position = new Vector3(spawnPoints[player.Key], Waver.Instance.GetY(spawnPoints[player.Key]));

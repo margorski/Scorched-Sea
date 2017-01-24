@@ -90,6 +90,7 @@ public class ShipBase : MonoBehaviour, IHitable
         OnFixedUpdate();
     }
 
+    protected virtual void OnCurrentSetActive(bool isActive) { }
     protected bool _isInControl = false;
     public void SetCurrent(bool current)
     {
@@ -124,6 +125,7 @@ public class ShipBase : MonoBehaviour, IHitable
                 temp.endWidth = temp.startWidth = width;
             }
         }
+        OnCurrentSetActive(current);
     }
 
     void DestroyElementsRight()

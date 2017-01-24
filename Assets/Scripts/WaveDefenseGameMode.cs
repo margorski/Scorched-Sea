@@ -71,7 +71,7 @@ internal class WaveDefenseGameMode : IGameMode
         DroneSpawnerInstanceRight.StartSpawning();
     }
 
-    public Ship CurrentlyPlayingShip()
+    public ShipShooter CurrentlyPlayingShip()
     {
         return Player;
     }
@@ -84,9 +84,9 @@ internal class WaveDefenseGameMode : IGameMode
     {
     }
 
-    public List<Ship> GetAllPlayerShips()
+    public List<ShipShooter> GetAllPlayerShips()
     {
-        return new List<Ship>() { Player };
+        return new List<ShipShooter>() { Player };
     }
 
     public void EnemyDestroyed(EnemyType type)
@@ -103,7 +103,7 @@ internal class WaveDefenseGameMode : IGameMode
 
     private bool respawning = false;
     private float respawnTime;
-    public void PlayerDied(Ship player)
+    public void PlayerDied(ShipShooter player)
     {
         if (Player == player)
         {

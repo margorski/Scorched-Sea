@@ -50,9 +50,9 @@ public class Ship : ShipShooter {
 
     protected override void ChangeWeapon()
     {
-        if(Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
-            switch(Weapon)
+            switch (Weapon)
             {
                 case Weapons.Blast:
                     Weapon = Weapons.Storm;
@@ -70,53 +70,13 @@ public class Ship : ShipShooter {
         }
     }
 
-    protected override void GunAction()
+    protected override bool IsShootReleased()
     {
-        switch (_gunState)
-        {
-            case GunState.Aiming:
-                if (!GameManager.Instance.SoundPlayer.IsPlaying())
-                {
-                    GameManager.Instance.SoundPlayer.PlayAim();
-                }
-                if (fireButtonPressed || _mouseClick == MouseClick.Double)
-                {
-                    _gunState = GunState.AdjustingPower;
-                    GameManager.Instance.SoundPlayer.Stop();
-                    GameManager.Instance.SoundPlayer.StartCharging();
-                }
-                break;
-            case GunState.AdjustingPower:
-                power += 0.2f;
-                power = Mathf.Clamp(power, _minPower, _maxPower);
-                ofDeck.SetPosition(1, new Vector3(rendererPosition.x, rendererPosition.y + power/_maxPower * 0.5f, rendererPosition.z));
-                if ((fireButtonPressed == false && _mouseClick == MouseClick.None) || power == _maxPower)
-                {
-                    _gunState = GunState.Fired;
-                    GameManager.Instance.SoundPlayer.Stop();
-                    GameManager.Instance.SoundPlayer.PlayShoot();
-                }
-                break;
-            case GunState.Fired:
-            	ofDeck.SetPosition(1, startPowerBarPosition);
-
-                if(Weapon == Weapons.Armageddon)
-                {
-                    ArmageddonShots();
-                    ArmageddonShot = 0;
-                    Weapon = Weapons.Blast;
-                }
-                else
-                {
-                    Bullet bullet = Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet;
-                    bullet.Shoot(power, angle, Weapon);
-
-                }
-                GameManager.Instance.ShipFired();
-                power = _minPower;
-                _gunState = GunState.Aiming;
-                break;
-        }
+        return fireButtonPressed == false && _mouseClick == MouseClick.None;
+    }
+    protected override bool IsShootPressed()
+    {
+        return fireButtonPressed || _mouseClick == MouseClick.Double;
     }
 
     protected override float AimResult()

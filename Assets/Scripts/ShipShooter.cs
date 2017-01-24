@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShipShooter : ShipBase {
+public class ShipShooter : ShipBase
+{
     public enum Weapons
     {
         Blast,
@@ -11,7 +12,6 @@ public class ShipShooter : ShipBase {
     }
 
     public Weapons Weapon;
-    public float amplutude = 0.1f;
     public float speed = 1;
     public float angle = 90;
     public int death = 0;
@@ -66,8 +66,57 @@ public class ShipShooter : ShipBase {
         return 0f;
     }
 
-    protected virtual void GunAction()
+    protected virtual bool IsShootReleased() { return false; }
+    protected virtual bool IsShootPressed() { return false; }
+
+
+    private void GunAction()
     {
+        switch (_gunState)
+        {
+            case GunState.Aiming:
+                if (!GameManager.Instance.SoundPlayer.IsPlaying())
+                {
+                    GameManager.Instance.SoundPlayer.PlayAim();
+                }
+                if (IsShootPressed())
+                {
+                    _gunState = GunState.AdjustingPower;
+                    GameManager.Instance.SoundPlayer.Stop();
+                    GameManager.Instance.SoundPlayer.StartCharging();
+                }
+                break;
+            case GunState.AdjustingPower:
+                power += 0.2f;
+                power = Mathf.Clamp(power, _minPower, _maxPower);
+                ofDeck.SetPosition(1, new Vector3(rendererPosition.x, rendererPosition.y + power / _maxPower * 0.5f, rendererPosition.z));
+                if (IsShootReleased() || power == _maxPower)
+                {
+                    _gunState = GunState.Fired;
+                    GameManager.Instance.SoundPlayer.Stop();
+                    GameManager.Instance.SoundPlayer.PlayShoot();
+                }
+                break;
+            case GunState.Fired:
+                ofDeck.SetPosition(1, startPowerBarPosition);
+
+                if (Weapon == Weapons.Armageddon)
+                {
+                    ArmageddonShots();
+                    ArmageddonShot = 0;
+                    Weapon = Weapons.Blast;
+                }
+                else
+                {
+                    Bullet bullet = Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet;
+                    bullet.Shoot(power, angle, Weapon);
+
+                }
+                GameManager.Instance.ShipFired();
+                power = _minPower;
+                _gunState = GunState.Aiming;
+                break;
+        }
     }
 
     private void Aim()
