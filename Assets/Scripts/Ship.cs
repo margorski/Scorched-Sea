@@ -2,146 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IHitable
-{
-    void Die();
-}
+public class Ship : ShipShooter {
 
-public class Ship : MonoBehaviour, IHitable {
-
-    public enum Weapons
-    {
-        Blast,
-        Storm,
-        Armageddon
-    }
-
-    delegate void Destroy();
-
-    Destroy destroyAll;
-    public Weapons Weapon;
-    private Vector3 myRotation = Vector3.zero;
-    public bool _isDead = false;
-    public float power = 10;
-    public float amplutude = 0.1f;
-    public float speed = 1;
-    public float angle = 90;
-    public float destroyAngle = 0;
-    public float _minPower, _maxPower;
-    public int death = 0;
-    public int kill = 0;
-    public int ArmageddonShot = 1;
-    public float clampMin, clampMax;
-    public Bullet bullets;
-    public bool FocusCamera = false;
-    public bool BoatSwims = false;
-    Transform gun;
-    List<Transform> allElements;
-
-    private GunState _gunState = GunState.Aiming;
-
-    Transform _deck;
-
-    Transform _leftSide;
-    Transform _rightSide;
-    Transform _Bottom;
-    LineRenderer ofDeck;
-
-    Vector3 rendererPosition;
-    Vector3 startPowerBarPosition;
-    enum GunState
-    {
-        Aiming,
-        AdjustingPower,
-        Fired
-    }
-    private bool _isInControl = false;
-    public void SetCurrent(bool current)
-    {
-        _isInControl = current;
-        var width = 0.02f;
-        if (current)
-            width += 0.05f;
-        var colorGreen = Color.green;
-        var colorYellow = Color.yellow;
-        var colorRed = Color.red;
-        Color currentColor;
-        //  if (GameManager.Instance.Players.IndexOf(this) == 0)
-        //      currentColor = colorYellow;
-        //  else
-        //     currentColor = colorRed;
-        currentColor = Color.white;
-        if(current)
-        {
-            foreach (var element in allElements)
-            {
-                var temp = element.GetComponent<LineRenderer>();
-                temp.endColor = temp.startColor = currentColor;
-                temp.endWidth = temp.startWidth = width;
-            }
-        }
-        else
-        {
-            foreach (var element in allElements)
-            {
-                var temp = element.GetComponent<LineRenderer>();
-                temp.endColor = temp.startColor = currentColor;
-                temp.endWidth = temp.startWidth = width;
-            }
-        }
-    }
-
-    void Start()
-    {
-        BoatSwims = GameManager.Instance.BoatBehavior == GameManager.BoatPosition.Drifting;
-    }
-
-    // Use this for initialization
-    void Awake () {
-
-        allElements = new List<Transform>();
-        gameObject.AddComponent<LineRenderer>();
-        gun = transform.FindChild("Dzialo");
-        allElements.Add(gun);
-        _minPower = 3f;
-        _maxPower = 20f;
-        power = _minPower;
-        _deck = transform.FindChild("Poklad");
-        allElements.Add(_deck);
-        Weapon = Weapons.Blast;
-        _leftSide = transform.Find("LewaBurta");
-        allElements.Add(_leftSide);
-        _rightSide = transform.Find("PrawaBurta");
-        allElements.Add(_rightSide);
-        _Bottom = transform.Find("Dno");
-        allElements.Add(_Bottom);
-        ofDeck = gameObject.GetComponent<LineRenderer>();
-        ofDeck.useWorldSpace = false;
-        _isDead = false;
-        ofDeck.startWidth = 0.1f;
-        
-        rendererPosition = _deck.GetComponent<LineRenderer>().GetPosition(0);
-
-        float deltaX;
-        if (Mathf.Sign(transform.position.x) > 0.0f)
-            deltaX = 0.9f;
-        else
-            deltaX = -0.3f;
-
-        rendererPosition = new Vector3(rendererPosition.x + deltaX, rendererPosition.y, rendererPosition.z);
-
-        for (int i = 0; i < 2; i++)
-        {
-            ofDeck.SetPosition(i, rendererPosition);
-        }
-        var ofDeckPosition = ofDeck.GetPosition(1);
-        startPowerBarPosition = new Vector3(rendererPosition.x, rendererPosition.y, rendererPosition.z);
-        destroyAll = DestroyElementsDown;
-        destroyAll += DestroyElementsGun;
-        destroyAll += DestroyElementsLeft;
-        destroyAll += DestroyElementsRight;
-        destroyAll += DestroyElementsUp;
-    }
 
     private float _doubleClickInterval = 0.3f;
     private float _clickTimestamp;
@@ -186,51 +48,7 @@ public class Ship : MonoBehaviour, IHitable {
         }
     }
 
-    private float _boatVelocity = 0f;
-	// Update is called once per frame
-	void FixedUpdate () {
-        if (_isDead)
-        {
-            destroyAll();
-            Invoke("DeadAll", 1.5f);
-            return;
-        }
-
-        float boatAngle;
-        var boatY = Waver.Instance.GetY(transform.position.x, out boatAngle);
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, boatAngle);
-        float newX = transform.position.x;
-        if (BoatSwims)
-        {
-            _boatVelocity += -boatAngle * 0.05f * Time.fixedDeltaTime; // speed from 
-            _boatVelocity -= _boatVelocity * Time.fixedDeltaTime;
-            if (Mathf.Abs(_boatVelocity) <= 0.001f) _boatVelocity = 0f;
-            _boatVelocity = Mathf.Clamp(_boatVelocity, -0.15f, 0.15f);
-            var deltaX = Mathf.Cos(Mathf.Deg2Rad * boatAngle) * _boatVelocity * Time.fixedDeltaTime;
-            newX = Mathf.Clamp(newX + deltaX, -6f, 6f);
-        }
-        transform.position = new Vector3(newX, boatY, transform.position.z);
-
-        if (GameManager.Instance.CamMode == GameManager.CameraMode.Stabilized && FocusCamera)
-            Camera.main.transform.eulerAngles = transform.eulerAngles;
-
-        if (!_isInControl)
-        {
-            return;
-        }
-        ChangeWeapon();
-        Aim();
-        GunAction();
-    }
-
-    public void Die()
-    {
-        _isDead = true;
-        GameManager.Instance.SoundPlayer.PlayExplosion();
-    }
-
-
-    void ChangeWeapon()
+    protected override void ChangeWeapon()
     {
         if(Input.GetKeyDown(KeyCode.Tab))
         {
@@ -252,7 +70,7 @@ public class Ship : MonoBehaviour, IHitable {
         }
     }
 
-    void GunAction()
+    protected override void GunAction()
     {
         switch (_gunState)
         {
@@ -301,98 +119,21 @@ public class Ship : MonoBehaviour, IHitable {
         }
     }
 
-    void Aim()
+    protected override float AimResult()
     {
-        if (_gunState == GunState.AdjustingPower || _gunState == GunState.Fired)
-            return;
-
         if (_mouseClick == MouseClick.Single)
         {
             var mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePoint.z = 0f;
             var GunToMouse = mousePoint - gun.position;
             var gunAngle = Mathf.Atan2(GunToMouse.y, GunToMouse.x) * Mathf.Rad2Deg - 90f;
-            var angleDelta = (gunAngle - angle) * Time.fixedDeltaTime;
-            SetGun(angle + angleDelta, angleDelta);
+            return (gunAngle - angle) * Time.fixedDeltaTime;
+            
         }
         else
         {
-            float z = -Input.GetAxisRaw("Horizontal") * speed * Time.fixedDeltaTime;
-            SetGun(angle + z, z);
+            return -Input.GetAxisRaw("Horizontal") * speed * Time.fixedDeltaTime;
         }
-    }
-
-    private void SetGun(float angleToSet, float z)
-    {
-        angle = Mathf.Clamp(angleToSet, clampMin, clampMax);
-        gun.eulerAngles = new Vector3(0, 0, angle);
-        GameManager.Instance.SoundPlayer.MovePitch(z);
-    }
-
-    void DestroyElementsRight()
-    {
-        float randX = Random.Range(0.005f, 0.01f);
-        float randY = Random.Range(-0.005f, 0.01f);
-        float speed = Random.Range(2, 4.5f);
-        _rightSide.Rotate(new Vector3((int)Random.Range(-1, 1) * speed, 0, (int)Random.Range(-1, 1) * speed));
-
-         _rightSide.position = new Vector3(_rightSide.position.x + randX, _rightSide.position.y + randY, _rightSide.position.z);
-    }
-
-    void DestroyElementsLeft()
-    {
-        float randX = Random.Range(0.005f, 0.01f);
-        float randY = Random.Range(-0.005f, 0.005f);
-        float speed = Random.Range(2, 4.5f);
-        _leftSide.Rotate(new Vector3((int)Random.Range(-1, 1) * speed, 0, (int)Random.Range(-1, 1) * speed));
-
-        _leftSide.position = new Vector3(_leftSide.position.x - randX, _leftSide.position.y - randY, _leftSide.position.z);
-    }
-
-    void DestroyElementsDown()
-    {
-        float randX = Random.Range(0.005f, 0.01f);
-        float randY = Random.Range(0.001f, 0.005f);
-        float speed = Random.Range(2, 4.5f);
-        _Bottom.Rotate(new Vector3((int)Random.Range(-1, 1) * speed, 0, (int)Random.Range(-1, 1) * speed));
-
-        _Bottom.position = new Vector3(_Bottom.position.x - randX, _Bottom.position.y - randY, _Bottom.position.z);
-    }
-
-    void DestroyElementsUp()
-    {
-        float randX = Random.Range(0.005f, 0.01f);
-        float randY = Random.Range(0.001f, 0.005f);
-        float speed = Random.Range(2, 4.5f);
-        _deck.Rotate(new Vector3((int)Random.Range(-1, 1) * speed, 0, (int)Random.Range(-1, 1) * speed));
-
-        _deck.position = new Vector3(_deck.position.x - randX, _deck.position.y + randY, _deck.position.z);
-    }
-
-    void DestroyElementsGun()
-    {
-        float randX = Random.Range(0.005f, 0.01f);
-        float randY = Random.Range(0.005f, 0.009f);
-        float speed = Random.Range(2, 4.5f);
-        gun.Rotate(new Vector3((int)Random.Range(-1, 1) * speed, 0, (int)Random.Range(-1, 1) * speed));
-        gun.position = new Vector3(gun.position.x - randX, gun.position.y + randY, gun.position.z);
-
-    }
-    void DeadAll()
-    {
-        GameManager.Instance.PlayerDied(this);
-        Destroy(gameObject);
-    }
-
-    void ArmageddonShots()
-    {
-        List<Bullet> allBulets = new List<Bullet>();
-        allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
-        allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
-        allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
-        allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
-        allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
-        allBulets.ForEach(x => x.Shoot(Random.Range(10, 13), Random.Range(-50, 50), Weapons.Blast));
     }
 
 }
