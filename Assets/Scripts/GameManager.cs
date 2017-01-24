@@ -206,6 +206,7 @@ public class GameManager : MonoBehaviour {
 
     public void ChangeLevel()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha0)) Waver.Instance.Init(-1);
         if (Input.GetKeyDown(KeyCode.Minus))  Waver.Instance.Init(Waver.Instance.CurrentLevel - 1);
         if (Input.GetKeyDown(KeyCode.Equals))   Waver.Instance.Init(Waver.Instance.CurrentLevel + 1);
         if (Input.GetKeyDown(KeyCode.Alpha1)) Waver.Instance.Init(1);

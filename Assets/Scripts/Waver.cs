@@ -52,11 +52,18 @@ public class Waver : MonoBehaviour
     public int CurrentLevel = 1;
     public void Init(int level)
     {
+        if (level == -1)
+        {
+            LoadLevel(-1);
+            return;
+        }
         if (level > Levels.Count) level = 1;
         if (level < 1) level = Levels.Count;
         CurrentLevel = level;
         LoadLevel(level - 1);
     }
+
+    private Wave Level0 = new Wave(0, 0, 0, 0, 0);
 
     public List<List<Wave>> Levels = new List<List<Wave>>()
     {
@@ -91,6 +98,11 @@ public class Waver : MonoBehaviour
     private void LoadLevel(int levelIndex)
     {
         _addWaves.Clear();
+        if (levelIndex == -1)
+        {
+            _mainWave = Level0;
+            return;
+        }
         if (Levels.Count <= levelIndex) return;
         _mainWave = Levels[levelIndex][0];
         foreach (var wave in Levels[levelIndex].Skip(1))
