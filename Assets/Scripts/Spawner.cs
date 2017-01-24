@@ -9,6 +9,7 @@ public class Spawner : MonoBehaviour {
     public float MaxSpawnTime;
     public float WorldXSpawnPosition;
     public GameObject SpawnPrefab;
+    public Transform PlayerLocation;
 
     private readonly List<GameObject> Spawns = new List<GameObject>();
     private bool _spawning = false;
@@ -41,7 +42,9 @@ public class Spawner : MonoBehaviour {
     private void Spawn()
     {
         _newSpawnTime = Time.time + Random.Range(MinSpawnTime, MaxSpawnTime);
-        Spawns.Add(Instantiate(SpawnPrefab, new Vector3(WorldXSpawnPosition, Waver.Instance.GetY(WorldXSpawnPosition)), Quaternion.identity));
+        var spawn = Instantiate(SpawnPrefab, new Vector3(WorldXSpawnPosition, Waver.Instance.GetY(WorldXSpawnPosition)), Quaternion.identity);
+        spawn.GetComponent<DroneShip>().PlayerLocation = PlayerLocation;
+        Spawns.Add(spawn);
     }
 
     public void DestroySpawns()

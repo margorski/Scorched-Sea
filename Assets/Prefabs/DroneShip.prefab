@@ -213,8 +213,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isDead: 0
   destroyAngle: 0
-  BoatMaxVelocityMin: 1
-  BoatMaxVelocityMax: 3
+  BoatMaxVelocityMin: 0.4
+  BoatMaxVelocityMax: 0.9
+  PlayerLocation: {fileID: 0}
 --- !u!120 &120479048573786104
 LineRenderer:
   m_ObjectHideFlags: 1

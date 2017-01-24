@@ -17,7 +17,6 @@ public class Waver : MonoBehaviour
     private Wave _mainWave;
     private readonly List<Wave> _addWaves = new List<Wave>();
     private float _currentTime = 0f;
-    private int _currentTurn = -1;
 
     public static Waver Instance
     {
@@ -48,11 +47,14 @@ public class Waver : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        _currentTurn = GameManager.Instance.TurnCounter;
     }
 
+    public int CurrentLevel = 1;
     public void Init(int level)
     {
+        if (level > Levels.Count) level = 1;
+        if (level < 1) level = Levels.Count;
+        CurrentLevel = level;
         LoadLevel(level - 1);
     }
 
@@ -64,7 +66,7 @@ public class Waver : MonoBehaviour
         new List<Wave>(){new Wave(2, 45, 0, 5, 0f), new Wave(1.8f, 120f, 0f, 10f, 0f, -1, 0.1f, 3f), new Wave(0.4f, 20f, 0f, 100f, 0f, -1, 0.3f, -0.8f), new Wave(0.5f, 40f, 20f, 120f, 8f, -1, 0.3f, -4.0f)},
         new List<Wave>()
         {   new Wave(1f, 45f, 0f, 20f, 0f), //main
-            new Wave(0.8f, 120f, 5f, 10f, 0f, 10, 0.1f, -5f),
+            new Wave(0.8f, 120f, 5f , 10f, 0f, 10, 0.1f, -5f),
             new Wave(0.8f, 120f, 10f, 10f, 0f, 10, 0.1f, -4f),
             new Wave(0.8f, 120f, 15f, 10f, 0f, 10, 0.1f, -3f),
             new Wave(0.8f, 120f, 20f, 10f, 0f, 10, 0.1f, -2f),
@@ -114,14 +116,9 @@ public class Waver : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_currentTurn != GameManager.Instance.TurnCounter)
-        {
-            _currentTurn = GameManager.Instance.TurnCounter;
-            onNewTurn();
-        }
     }
 
-    private void onNewTurn()
+    public void OnNewTurn()
     {
         _addWaves.ForEach(x => x.onNewTurn());
         _addWaves.Where(x => x.IsActive == false).ToList().ForEach(x => x.DieOut());

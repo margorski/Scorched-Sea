@@ -279,21 +279,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f545ff502e7d641b8ed5efe5c33fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Players: []
-  TurnEndDelay: 0.55
-  RoundEndDelay: 3
+  SpawnablePrefabs:
+  - type: 0
+    prefab: {fileID: 1683569868162568, guid: 80aa7b5b50407194aad2d86158b0f947, type: 2}
+  - type: 1
+    prefab: {fileID: 1755052695346640, guid: a60a5bdded58def46ae81d05ed263941, type: 2}
   ShipPrefab: {fileID: 1683569868162568, guid: 80aa7b5b50407194aad2d86158b0f947, type: 2}
   WindForce: 0
   MinWind: -15
   MaxWind: 15
-  TurnPhase: 0
-  SpawnMinX: 2
-  SpawnMaxX: 7
   SoundPlayer: {fileID: 0}
-  currentPlayer: -1
-  winPlayer: -1
-  DroneSpawner: {fileID: 0}
+  DroneSpawner: {fileID: 114102157881474374, guid: a60a5bdded58def46ae81d05ed263941,
+    type: 2}
   CamMode: 0
   BoatBehavior: 0
   PMode: 0
   DefenseScore: 0
+  Instructions: {fileID: 0}

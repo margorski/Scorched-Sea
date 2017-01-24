@@ -53,7 +53,7 @@ public class DroneShip : MonoBehaviour, IHitable {
         if (_isDead) return;
         _isDead = true;
         GameManager.Instance.SoundPlayer.PlayExplosion();
-        GameManager.Instance.DefenseScore += 15;
+        GameManager.Instance.DroneEnemyDestroyed(EnemyType.Drone);
     }
 
 
@@ -61,6 +61,9 @@ public class DroneShip : MonoBehaviour, IHitable {
     public float BoatMaxVelocityMax;
     private float _boatMaxVelocity;
     private float _boatVelocity = 0f;
+
+    public Transform PlayerLocation;
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -73,15 +76,16 @@ public class DroneShip : MonoBehaviour, IHitable {
         float boatAngle;
         var boatY = Waver.Instance.GetY(transform.position.x, out boatAngle);
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, boatAngle);
-        var driveVelocity = -2f * Mathf.Cos(Mathf.Deg2Rad * boatAngle) * Time.fixedDeltaTime;
+        float direction = 0f;
+        direction = PlayerLocation == null ? 0f : Mathf.Sign(PlayerLocation.position.x - transform.position.x);
+        var driveVelocity = direction  * 5f * Mathf.Cos(Mathf.Deg2Rad * boatAngle) * Time.fixedDeltaTime;
         float newX = transform.position.x;
         _boatVelocity += driveVelocity - boatAngle * 0.05f * Time.fixedDeltaTime; // speed from 
         _boatVelocity -= _boatVelocity * Time.fixedDeltaTime;
         if (Mathf.Abs(_boatVelocity) <= 0.001f) _boatVelocity = 0f;
-        _boatVelocity = Mathf.Clamp(_boatVelocity, -_boatMaxVelocity, 0.5f);
+        _boatVelocity = Mathf.Clamp(_boatVelocity, -_boatMaxVelocity, _boatMaxVelocity);
         var deltaX = Mathf.Cos(Mathf.Deg2Rad * boatAngle) * _boatVelocity * Time.fixedDeltaTime;
-        newX = Mathf.Clamp(newX + deltaX, -6f, 6f);
-        transform.position = new Vector3(newX, boatY, transform.position.z);
+        transform.position = new Vector3(newX + deltaX, boatY, transform.position.z);
 
     }
 

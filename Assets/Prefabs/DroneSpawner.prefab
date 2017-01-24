@@ -51,8 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58f8a9e9430ba2745a598b2366ccf7a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MinSpawnTime: 1.5
-  MaxSpawnTime: 3
-  WorldXSpawnPosition: 11
+  MinSpawnTime: 3
+  MaxSpawnTime: 5
+  WorldXSpawnPosition: 10
   SpawnPrefab: {fileID: 1661016525590138, guid: 7d3f38a54b7509449bb864c7bbc54c31,
     type: 2}
+  PlayerLocation: {fileID: 0}

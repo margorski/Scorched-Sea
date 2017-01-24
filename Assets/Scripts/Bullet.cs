@@ -103,6 +103,6 @@ public class Bullet : MonoBehaviour {
         Destroy(gameObject);
         var allBulletsInGame = GameObject.FindGameObjectsWithTag("Bullet");
         if (allBulletsInGame.Length == 1)
-        GameManager.Instance.NextPhase();
+            GameManager.Instance.AllBulletsDestroyed();
     }
 }

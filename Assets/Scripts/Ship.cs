@@ -55,9 +55,10 @@ public class Ship : MonoBehaviour, IHitable {
         AdjustingPower,
         Fired
     }
-
+    private bool _isInControl = false;
     public void SetCurrent(bool current)
     {
+        _isInControl = current;
         var width = 0.02f;
         if (current)
             width += 0.05f;
@@ -140,13 +141,6 @@ public class Ship : MonoBehaviour, IHitable {
         destroyAll += DestroyElementsLeft;
         destroyAll += DestroyElementsRight;
         destroyAll += DestroyElementsUp;
-        if (GameManager.Instance.PMode == GameManager.PlayMode.Versus)
-        {
-            var indexOfPlayer = GameManager.Instance.Players.IndexOf(this);
-            if (indexOfPlayer != -1)
-                Hud.Instance.SelectWeapon(indexOfPlayer, Weapon);
-        }
-        else Hud.Instance.SelectWeapon(0, Weapon);
     }
 
     private float _doubleClickInterval = 0.3f;
@@ -220,9 +214,7 @@ public class Ship : MonoBehaviour, IHitable {
         if (GameManager.Instance.CamMode == GameManager.CameraMode.Stabilized && FocusCamera)
             Camera.main.transform.eulerAngles = transform.eulerAngles;
 
-        if (GameManager.Instance.PMode == GameManager.PlayMode.Versus &&
-            (GameManager.Instance.GetCurrentPlayer() != this
-             || GameManager.Instance.TurnPhase != GameManager.TurnPhaseType.PlayerMove))
+        if (!_isInControl)
         {
             return;
         }
@@ -248,7 +240,7 @@ public class Ship : MonoBehaviour, IHitable {
                     Weapon = Weapons.Storm;
                     break;
                 case Weapons.Storm:
-                    if (ArmageddonShot == 1)
+                    if (ArmageddonShot >= 1)
                         Weapon = Weapons.Armageddon;
                     else Weapon = Weapons.Blast;
                     break;
@@ -257,18 +249,6 @@ public class Ship : MonoBehaviour, IHitable {
                     break;
 
             }
-          //if (Weapon == Weapons.Blast)
-          //      Weapon = Weapons.Storm;
-          //  else Weapon = Weapons.Blast;
-            if (GameManager.Instance.PMode == GameManager.PlayMode.WaveDefense)
-            {
-                Hud.Instance.SelectWeapon(0, Weapon);
-            }
-            else
-            {
-                Hud.Instance.SelectWeapon(GameManager.Instance.currentPlayer, Weapon);
-            }
-            
         }
     }
 
@@ -307,7 +287,6 @@ public class Ship : MonoBehaviour, IHitable {
                     ArmageddonShots();
                     ArmageddonShot = 0;
                     Weapon = Weapons.Blast;
-                    Hud.Instance.SelectWeapon(GameManager.Instance.currentPlayer, Weapon);
                 }
                 else
                 {
@@ -315,7 +294,7 @@ public class Ship : MonoBehaviour, IHitable {
                     bullet.Shoot(power, angle, Weapon);
 
                 }
-                GameManager.Instance.NextPhase();
+                GameManager.Instance.ShipFired();
                 power = _minPower;
                 _gunState = GunState.Aiming;
                 break;
@@ -401,10 +380,8 @@ public class Ship : MonoBehaviour, IHitable {
     }
     void DeadAll()
     {
+        GameManager.Instance.PlayerDied(this);
         Destroy(gameObject);
-        if(GameManager.Instance.Players.IndexOf(this) != -1)
-            GameManager.Instance.Players[GameManager.Instance.Players.IndexOf(this)] = null;
-       // gameObject.SetActive(false);
     }
 
     void ArmageddonShots()

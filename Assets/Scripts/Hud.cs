@@ -61,8 +61,6 @@ public class Hud : MonoBehaviour {
         player2Weapon3 = transform.FindChild("Player2Info/Weapons/Weapon3Name").gameObject.GetComponent<Text>();
         WinMessage = transform.FindChild("WinMsg").gameObject.GetComponent<Text>(); ;
         WinMessage.enabled = false;
-        SelectWeapon(0, Ship.Weapons.Blast);
-        SelectWeapon(1, Ship.Weapons.Blast);
     }
 
     // Update is called once per frame
@@ -75,33 +73,55 @@ public class Hud : MonoBehaviour {
     private void FixedUpdate()
     {
         DrawWindArrow();
-        if (GameManager.Instance.PMode == GameManager.PlayMode.WaveDefense)
+    }
+
+    public void UpdateDefenseScore(int score)
+    {
+        player1Name.text = "Hiro";
+        player1Stats.text = "Score: " + score;
+    }
+
+    public void UpdateNames(int playerIndex, string name)
+    {
+        if (playerIndex == 1)
         {
-            player1Name.text = "Hiro";
-            player1Stats.text = "Score: " + GameManager.Instance.DefenseScore;
-            return;
-        }
-        if (GameManager.Instance.Players[0] != null)
-        {
-            player1Name.text = GameManager.Instance.playerStats[0].name;
-            player1Stats.text = "W:" + GameManager.Instance.playerStats[0].kills + " L:" + GameManager.Instance.playerStats[0].deaths;
+            player1Name.text = name;
             //weapon
         }
-        if (GameManager.Instance.Players[1] != null)
+        if (playerIndex == 2)
         {
-            player2Name.text = GameManager.Instance.playerStats[1].name;
-            player2Stats.text = "W:" + GameManager.Instance.playerStats[1].kills + " L:" + GameManager.Instance.playerStats[1].deaths;
+            player2Name.text = name;
         }
-        WinMessage.enabled = (GameManager.Instance.TurnPhase == GameManager.TurnPhaseType.EndOfRound);
-        if (WinMessage.enabled)
+    }
+
+    public void UpdateScores(int playerIndex, int kills, int deaths)
+    {
+        if (playerIndex == 1)
         {
-            WinMessage.text = GameManager.Instance.playerStats[GameManager.Instance.winPlayer].name + " WIN";
+            player1Stats.text = "W:" + kills + " L:" + deaths;
+            //weapon
         }
+        if (playerIndex == 2)
+        {
+            player2Stats.text = "W:" + kills + " L:" + deaths;
+        }
+    }
+
+    public void ShowWinMessage(string name, float time)
+    {
+        WinMessage.enabled = true;
+        WinMessage.text = name + " WIN";
+        Invoke("HideWinMessage", time);
+    }
+
+    public void HideWinMessage()
+    {
+        WinMessage.enabled = false;
     }
 
     public void SelectWeapon(int playerNumber, Ship.Weapons weaponType)
     {
-        if (playerNumber == 0)
+        if (playerNumber == 1)
         {
             if (weaponType == Ship.Weapons.Blast)
             {
@@ -122,7 +142,7 @@ public class Hud : MonoBehaviour {
                 player1Weapon3.CrossFadeAlpha(1.0f, 0.7f, false);
             }
         }
-        if (playerNumber == 1)
+        if (playerNumber == 2)
         {
             if (weaponType == Ship.Weapons.Blast)
             {
@@ -147,7 +167,7 @@ public class Hud : MonoBehaviour {
 
     public void SetPlayerTextEnabled(int player, bool enabled)
     {
-        if (player == 0)
+        if (player == 1)
         {
             player1Name.enabled = enabled;
             player1Stats.enabled = enabled;
@@ -165,12 +185,12 @@ public class Hud : MonoBehaviour {
 
     public void SelectPlayer(int playerNumber)
     {
-        if (playerNumber == 0)
+        if (playerNumber == 1)
         {
             player1Name.CrossFadeAlpha(1.0f, 1.0f, false);
             player2Name.CrossFadeAlpha(0.1f, 1.0f, false);
         }
-        if (playerNumber == 1)
+        if (playerNumber == 2)
         {
             player1Name.CrossFadeAlpha(0.1f, 1.0f, false);
             player2Name.CrossFadeAlpha(1.0f, 1.0f, false);

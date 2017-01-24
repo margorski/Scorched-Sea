@@ -55,7 +55,6 @@ public class Explosion : MonoBehaviour {
                 continue;
             }
             var lengthScale = 1f - ((HowLong - timeElapsed) / HowLong);
-           // ExplosionRays[i].GetComponent<
             var Rad = Mathf.Deg2Rad * ExplosionRayDatas[i].Angle;
             var rayLength = lengthScale * ExplosionRayDatas[i].Length;
             var endPoint = rayLength * new Vector2(Mathf.Sign(Rad), Mathf.Cos(Rad));
