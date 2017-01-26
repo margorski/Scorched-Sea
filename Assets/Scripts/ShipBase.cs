@@ -91,7 +91,7 @@ public class ShipBase : MonoBehaviour, IHitable
     }
 
     protected virtual void OnCurrentSetActive(bool isActive) { }
-    public bool _isInControl = false;
+    protected bool _isInControl = false;
     public void SetCurrent(bool current)
     {
         _isInControl = current;
