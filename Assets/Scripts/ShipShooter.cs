@@ -22,6 +22,8 @@ public class ShipShooter : ShipBase
     public bool FocusCamera = false;
     public bool BoatSwims = false;
 
+    bool _isFired = false;
+
     public const float _minPower = 3f;
     public const float _maxPower = 20f;
     protected float power = _minPower;
@@ -72,6 +74,7 @@ public class ShipShooter : ShipBase
 
     private void GunAction()
     {
+
         switch (_gunState)
         {
             case GunState.Aiming:

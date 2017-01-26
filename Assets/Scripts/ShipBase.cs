@@ -97,15 +97,8 @@ public class ShipBase : MonoBehaviour, IHitable
         _isInControl = current;
         var width = 0.02f;
         if (current)
-            width += 0.05f;
-        var colorGreen = Color.green;
-        var colorYellow = Color.yellow;
-        var colorRed = Color.red;
+            width += 0.05f;i
         Color currentColor;
-        //  if (GameManager.Instance.Players.IndexOf(this) == 0)
-        //      currentColor = colorYellow;
-        //  else
-        //     currentColor = colorRed;
         currentColor = Color.white;
         if (current)
         {
