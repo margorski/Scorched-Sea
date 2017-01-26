@@ -91,13 +91,13 @@ public class ShipBase : MonoBehaviour, IHitable
     }
 
     protected virtual void OnCurrentSetActive(bool isActive) { }
-    protected bool _isInControl = false;
+    public bool _isInControl = false;
     public void SetCurrent(bool current)
     {
         _isInControl = current;
         var width = 0.02f;
         if (current)
-            width += 0.05f;i
+            width += 0.05f;
         Color currentColor;
         currentColor = Color.white;
         if (current)

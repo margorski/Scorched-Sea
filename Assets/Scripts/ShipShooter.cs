@@ -101,6 +101,7 @@ public class ShipShooter : ShipBase
                 }
                 break;
             case GunState.Fired:
+                _isInControl = false;
                 ofDeck.SetPosition(1, startPowerBarPosition);
 
                 if (Weapon == Weapons.Armageddon)
