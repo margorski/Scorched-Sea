@@ -19,54 +19,39 @@ public class AiShipShooter : ShipShooter {
         return _firePressed;
     }
 
-    protected override void OnFixedUpdate()
-    {
-        base.OnFixedUpdate();
-        if (_firePressed && powerCounter-- == 0) _firePressed = false;
-    }
-
 
     private GameObject player = null;
-    private const float constAim = 30f;
-    private float aim = 45f;
-    private int powerCounter;
+    private float aim = 0f;
     protected override float AimResult()
     {
+        //massive algorithm thinks haaard
         
-        var playerX = player.transform.position.x;
-        Debug.Log(angle);
-        return angle < -aim && Mathf.Abs(angle - aim) > 0.001f ? 1f : -1f;
+        if (player != null)
+        {
+            var playerX = player.transform.position.x;
+            if (transform.position.x < playerX && angle > -aim) return -1f;
+            if (transform.position.x > playerX && angle < aim) return 1f;
+            return 0f;
+        }
+        return angle < aim ? 1f : -1f;
     }
 
     protected override void OnCurrentSetActive(bool isActive)
     {
         player = FindObjectOfType<Ship>().gameObject;
-        //massive algorithm thinks haaard
-        var wind = GameManager.Instance.WindForce;
-        var playerX = player.transform.position.x;
-        if (transform.position.x < playerX) aim = constAim;
-        if (transform.position.x > playerX) aim = -1f * constAim;
-        playerX = Mathf.Abs(transform.position.x - player.transform.position.x);
-        var aimAngle = aim * Mathf.Deg2Rad;
-        var mass = 10f;
-        var gravity = 1f;
-        var tempSth = wind / mass / gravity * Mathf.Cos(-aimAngle) + Mathf.Sin(-aimAngle);
-        var aimPower = gravity * playerX / Mathf.Cos(-aimAngle) / tempSth;
-        Debug.Log(aimPower);
-        powerCounter = Mathf.RoundToInt((Mathf.Pow(aimPower, 0.5f) - _minPower) / 0.2f);
-
-        if (isActive) Invoke("StartShooting", 2f);
+        aim = Random.Range(22f, 35f);
+        if(isActive) Invoke("StartShooting", 2f);
     }
 
     private bool _firePressed = false;
     private void StartShooting()
     {
         _firePressed = true;
-        //Invoke("StopShooting", 0.8f + Random.Range(-0.07f, 0.07f));
+        Invoke("StopShooting", 0.8f + Random.Range(-0.07f, 0.07f));
     }
     private void StopShooting()
     {
-        //_firePressed = false;
+        _firePressed = false;
     }
 
 }
