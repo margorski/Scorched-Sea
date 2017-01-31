@@ -15,6 +15,7 @@ public class WaveLineRenderer : MonoBehaviour, IRecordable {
     public GameObject ChildPrefab;
     internal float Scale = 1f;
     internal float YOffset = 0f;
+    internal float XOffset = 0f;
 
     private int _noOfPoints { get { return NumberOfSegments + 1; } }
     private float _pointInterval;
@@ -31,7 +32,8 @@ public class WaveLineRenderer : MonoBehaviour, IRecordable {
             var color = LineToRenderTo.startColor;
             var colorAlpha = 1f;
             var yOffset = YOffset;
-            for (int i = 0; i < 8; i++)
+            var xOffset = XOffset;
+            for (int i = 0; i < 6; i++)
             {
                 var child = Instantiate(ChildPrefab, transform).GetComponent<WaveLineRenderer>();
 
@@ -41,7 +43,29 @@ public class WaveLineRenderer : MonoBehaviour, IRecordable {
                 child.Scale = Scale * Mathf.Pow(0.85f, i);
                 yOffset -= 1f * child.Scale;
                 child.YOffset = yOffset;
+                xOffset -= 0.2f * child.Scale;
+                child.XOffset = xOffset;
                 colorAlpha *= 0.6f;
+                child.LineToRenderTo.startColor = new Color(color.r, color.g, color.b, colorAlpha);
+                child.LineToRenderTo.endColor = new Color(color.r, color.g, color.b, colorAlpha);
+            }
+
+            colorAlpha = 1f;
+            yOffset = YOffset;
+            xOffset = XOffset;
+            for (int i = 0; i < 3; i++)
+            {
+                var child = Instantiate(ChildPrefab, transform).GetComponent<WaveLineRenderer>();
+
+                child.WorldXStart = WorldXStart;
+                child.WorldXEnd = WorldXEnd;
+                child.NumberOfSegments = NumberOfSegments;
+                child.Scale = Scale * Mathf.Pow(0.7f, i);
+                yOffset += 1f * child.Scale;
+                child.YOffset = yOffset;
+                xOffset += 0.15f * child.Scale;
+                child.XOffset = xOffset;
+                colorAlpha *= 0.5f;
                 child.LineToRenderTo.startColor = new Color(color.r, color.g, color.b, colorAlpha);
                 child.LineToRenderTo.endColor = new Color(color.r, color.g, color.b, colorAlpha);
             }
@@ -73,6 +97,7 @@ public class WaveLineRenderer : MonoBehaviour, IRecordable {
         {
             x = WorldXStart + _pointInterval * index;
             y = Waver.Instance.GetY(x) * Scale + YOffset;
+            x += XOffset;
 
             LineToRenderTo.SetPosition(index, new Vector3(x, y, z));
             _singleFrameWavePosition.Add(new Vector3(x, y, z));

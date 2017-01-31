@@ -16,6 +16,8 @@ public class Waver : MonoBehaviour
 
     private Wave _mainWave;
     private readonly List<Wave> _addWaves = new List<Wave>();
+    private readonly Wave[] _ripples = new Wave[10];
+    private int _ripplesIndex;
     private float _currentTime = 0f;
 
     public static Waver Instance
@@ -42,6 +44,12 @@ public class Waver : MonoBehaviour
         }
         _instance = this;
         DontDestroyOnLoad(gameObject);
+        for (int i = 0; i < _ripples.Length; i++)
+        {
+            _ripples[i] = new Wave(0f, 0f, 0f, 0f, 0f, 0);
+            _ripples[i].State = Wave.WaveState.Dead;
+            _ripplesIndex = 0;
+        }
     }
 
     // Use this for initialization
@@ -52,6 +60,7 @@ public class Waver : MonoBehaviour
     public int CurrentLevel = 1;
     public void Init(int level)
     {
+        ClearRipples();
         if (level == -1)
         {
             LoadLevel(-1);
@@ -63,35 +72,47 @@ public class Waver : MonoBehaviour
         LoadLevel(level - 1);
     }
 
+    private void ClearRipples()
+    {
+        for (int i = 0; i < _ripples.Length; i++)
+        {
+            _ripples[i].State = Wave.WaveState.Dead;
+            _ripplesIndex = 0;
+        }
+    }
+
     private Wave Level0 = new Wave(0, 0, 0, 0, 0);
 
     public List<List<Wave>> Levels = new List<List<Wave>>()
     {
         new List<Wave>(){new Wave(1, 45, 0, 20, 0) },
-        new List<Wave>(){new Wave(1.2f, 60f, 0, 25, 5000f) },
-        new List<Wave>(){new Wave(2, 45, 0, 5, 50f), new Wave(1.2f, 80f, 0f, 10f, 0f, -1, 2f, 3f), new Wave(1.2f, 80f, 0f, 10f, 0f, -1, 2f, -3f) },
-        new List<Wave>(){new Wave(2, 45, 0, 5, 0f), new Wave(1.8f, 120f, 0f, 10f, 0f, -1, 0.1f, 3f), new Wave(0.4f, 20f, 0f, 100f, 0f, -1, 0.3f, -0.8f), new Wave(0.5f, 40f, 20f, 120f, 8f, -1, 0.3f, -4.0f)},
+        new List<Wave>(){new Wave(1f, 60f, 0, 25, 5000f) },
+        new List<Wave>(){new Wave(1, 45, 0, 5, 50f), new Wave(1.2f, 80f, 0f, 10f, 0f, -1, 2f, 3f), new Wave(1.2f, 80f, 0f, 10f, 0f, -1, 2f, -3f) },
+        new List<Wave>(){new Wave(1.2f, 45, 0, 5, 0f),
+            new Wave(1.0f, 120f, 0f, 10f, 0f, -1, 0.1f, 3f),
+            new Wave(0.4f, 20f, 0f, 100f, 0f, -1, 0.3f, -0.8f),
+            new Wave(0.3f, 40f, 20f, 120f, 8f, -1, 0.3f, -4.0f)},
         new List<Wave>()
         {   new Wave(1f, 45f, 0f, 20f, 0f), //main
-            new Wave(0.8f, 120f, 5f , 10f, 0f, 10, 0.1f, -5f),
-            new Wave(0.8f, 120f, 10f, 10f, 0f, 10, 0.1f, -4f),
-            new Wave(0.8f, 120f, 15f, 10f, 0f, 10, 0.1f, -3f),
-            new Wave(0.8f, 120f, 20f, 10f, 0f, 10, 0.1f, -2f),
-            new Wave(0.8f, 120f, 25f, 10f, 0f, 10, 0.1f, -1f),
-            new Wave(0.8f, 120f, 30f, 10f, 0f, 10, 0.1f, 0f),
-            new Wave(0.8f, 120f, 35f, 10f, 0f, 10, 0.1f, 1f),
-            new Wave(0.8f, 120f, 40f, 10f, 0f, 10, 0.1f, 2f),
-            new Wave(0.8f, 120f, 45f, 10f, 0f, 10, 0.1f, 3f),
-            new Wave(0.8f, 120f, 50f, 10f, 0f, 10, 0.1f, 4f),
-            new Wave(0.8f, 120f, 55f, 10f, 0f, 10, 0.1f, 5f),
+            new Wave(0.2f, 120f, 5f , 10f, 0f, 10, 0.1f, -5f),
+            new Wave(0.2f, 120f, 10f, 10f, 0f, 10, 0.1f, -4f),
+            new Wave(0.2f, 120f, 15f, 10f, 0f, 10, 0.1f, -3f),
+            new Wave(0.2f, 120f, 20f, 10f, 0f, 10, 0.1f, -2f),
+            new Wave(0.2f, 120f, 25f, 10f, 0f, 10, 0.1f, -1f),
+            new Wave(0.2f, 120f, 30f, 10f, 0f, 10, 0.1f, 0f),
+            new Wave(0.2f, 120f, 35f, 10f, 0f, 10, 0.1f, 1f),
+            new Wave(0.2f, 120f, 40f, 10f, 0f, 10, 0.1f, 2f),
+            new Wave(0.2f, 120f, 45f, 10f, 0f, 10, 0.1f, 3f),
+            new Wave(0.2f, 120f, 50f, 10f, 0f, 10, 0.1f, 4f),
+            new Wave(0.2f, 120f, 55f, 10f, 0f, 10, 0.1f, 5f),
         },
         new List<Wave>()
         {   new Wave(0.5f, 45f, 0f, 10f, 0f), //main
-            new Wave(1.8f, 60f * 4f, -60f, 15f, 0f, -1, 1f, -1f),
-            new Wave(2.0f, 50f * 4f, 0f, 35f, 0f, -1, 1f, -0.5f),
-            new Wave(2.8f, 40f * 4f, 0f, 45f, 0f, -1, 1f, 0f),
-            new Wave(2.0f, 50f * 4f, 0f, 35f, 0f, -1, 1f, 0.5f),
-            new Wave(1.8f, 60f * 4f, 60f, 15f, 0f, -1, 1f, 1f),
+            new Wave(1.0f, 60f * 4f, -60f, 15f, 0f, -1, 1f, -1f),
+            new Wave(1.2f, 50f * 4f, 0f, 35f, 0f, -1, 1f, -0.5f),
+            new Wave(1.0f, 40f * 4f, 0f, 45f, 0f, -1, 1f, 0f),
+            new Wave(1.2f, 50f * 4f, 0f, 35f, 0f, -1, 1f, 0.5f),
+            new Wave(1.0f, 60f * 4f, 60f, 15f, 0f, -1, 1f, 1f),
         },
     };
 
@@ -123,6 +144,12 @@ public class Waver : MonoBehaviour
     public void AddFunc(float worldXEpicenter, int turns, float damp = 5f)
     {
         AddWave(new Wave(MainAmplitude * 3.5f, Pindol200 * 1.5f, DegreesPhase + 30f, Frequency * 8f, 0.2f, turns, damp, worldXEpicenter));
+    }
+
+    public void AddRipple(float worldXEpicenter)
+    {
+        if (_ripplesIndex == _ripples.Length) _ripplesIndex = 0;
+        _ripples[_ripplesIndex++].SetRipple(worldXEpicenter, 1f, 1f);
     }
 
     // Update is called once per frame
@@ -181,6 +208,7 @@ public class Waver : MonoBehaviour
             LastTimeUpdate[index] =
                 _mainWave.GetY(x, _currentTime) +
                 _addWaves.Sum(wave => wave.GetY(x, _currentTime)) +
+                _ripples.Sum(wave => wave.GetY(x, _currentTime)) +
                 YOffset;
         }
     }
@@ -212,9 +240,16 @@ public class Wave
         Dead
     };
 
-    public WaveState State = WaveState.Awake;
+    public enum WaveType
+    {
+        Ripple,
+        Normal
+    }
 
-    public bool IsActive { get { return TurnsActive == -1 || (TurnsActive - CurrentTurnActive >= 0); } }
+    public WaveState State = WaveState.Awake;
+    public WaveType Type = WaveType.Normal;
+
+    public bool IsActive { get { return Type == WaveType.Normal && (TurnsActive == -1 || (TurnsActive - CurrentTurnActive >= 0)); } }
 
     public Wave(float amp, float pindol, float phase, float freq, float stdWaveCoeff, int turnsActive = -1)
     {
@@ -240,21 +275,38 @@ public class Wave
         IsMain = false;
     }
 
+    internal void SetRipple(float x, float duration, float scale)
+    {
+        MainAmplitude = 0.4f * scale;
+        Pindol200 = 200f;
+        Frequency = 600f;
+        DegreesPhase = (-45f - Time.time * Pindol200 - x * Frequency);     // x * freq + t * pindol + phase = -45f
+        TurnsActive = 1;
+        StandingWaveCoeff = 1f;
+        DampingFactor = 5f / scale;
+        WorldXEpicenter = x;
+        TransitionTime = duration;
+        _transitionTimestamp = Time.time + duration / 10f;
+        Type = WaveType.Ripple;
+        IsMain = false;
+        DieOut();
+    }
 
     public float GetY(float x, float currentTime)
     {
         if (State == WaveState.Dead) return 0f;
         var omegaT = Mathf.Deg2Rad * (currentTime * Pindol200);
-        var kaIks = Mathf.Deg2Rad * ((x + DegreesPhase) * Frequency);
+        var kaIks = Mathf.Deg2Rad * (x * Frequency);
+        var phase = Mathf.Deg2Rad * DegreesPhase;
         if (IsMain)
         {
-            var standingMain = StandingWaveCoeff < Mathf.Epsilon ? 1f : Mathf.Cos(kaIks / StandingWaveCoeff + omegaT);
-            return Mathf.Sin(kaIks + omegaT) * standingMain * MainAmplitude;
+            var standingMain = StandingWaveCoeff < Mathf.Epsilon ? 1f : Mathf.Sin(-kaIks / StandingWaveCoeff + omegaT + phase);
+            return (Mathf.Sin(kaIks + omegaT + phase) + standingMain) * MainAmplitude;
         }
 
-        var standing = StandingWaveCoeff < Mathf.Epsilon ? 1f : -Mathf.Sin(kaIks / StandingWaveCoeff + omegaT);
+        var standing = StandingWaveCoeff < Mathf.Epsilon ? 1f : Mathf.Sin(-kaIks / StandingWaveCoeff + omegaT + phase);
         float howFar = Mathf.Abs(WorldXEpicenter - x);
-        var y = Mathf.Pow(2.71828f, -howFar * DampingFactor) * Mathf.Cos(kaIks + omegaT) * standing * MainAmplitude;
+        var y = Mathf.Pow(2.71828f, -howFar * DampingFactor) * (Mathf.Sin(kaIks + omegaT + phase) + standing) * MainAmplitude;
         var turnDelta = 0f;
         if (State == WaveState.Dying || State == WaveState.Damping)
         {

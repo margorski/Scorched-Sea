@@ -87,6 +87,7 @@ public class Bullet : MonoBehaviour {
             if (bulletType == Ship.Weapons.Blast)
             {
                 Instantiate(ExplosionPrefab, transform.position, transform.rotation);
+                Waver.Instance.AddRipple(transform.position.x);
             }
             Die();
             GameManager.Instance.SoundPlayer.PlayExplosion();
