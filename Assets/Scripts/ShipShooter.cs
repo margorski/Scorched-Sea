@@ -24,6 +24,7 @@ public class ShipShooter : ShipBase
 
     bool _isFired = false;
 
+    public float PowerBuildUp;
     public const float _minPower = 3f;
     public const float _maxPower = 20f;
     protected float power = _minPower;
@@ -90,7 +91,7 @@ public class ShipShooter : ShipBase
                 }
                 break;
             case GunState.AdjustingPower:
-                power += 0.2f;
+                power += PowerBuildUp;
                 power = Mathf.Clamp(power, _minPower, _maxPower);
                 ofDeck.SetPosition(1, new Vector3(rendererPosition.x, rendererPosition.y + power / _maxPower * 0.5f, rendererPosition.z));
                 if (IsShootReleased() || power == _maxPower)
@@ -125,10 +126,11 @@ public class ShipShooter : ShipBase
 
     private void Aim()
     {
-        if (_gunState == GunState.AdjustingPower || _gunState == GunState.Fired)
-            return;
-
-        var aimResult = AimResult();
+        var aimResult = 0f;
+        if (_gunState != GunState.AdjustingPower && _gunState != GunState.Fired)
+        {
+            aimResult = AimResult();
+        }
         SetGun(angle + aimResult, aimResult);
     }
 

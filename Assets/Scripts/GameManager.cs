@@ -194,6 +194,8 @@ public class GameManager : MonoBehaviour {
         SetSound();
         ChangeLevel();
 
+        if (Input.GetKeyDown(KeyCode.C))      ShowCelownik();
+
         _currentGameMode.OnFixedUpdate();
     }
 
@@ -216,6 +218,14 @@ public class GameManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha5)) Waver.Instance.Init(5);
         if (Input.GetKeyDown(KeyCode.Alpha6)) Waver.Instance.Init(6);
         if (Input.GetKeyDown(KeyCode.F1))     ShowInstructions();
+    }
+
+    private void ShowCelownik()
+    {
+        foreach (var celScript in FindObjectsOfType<CelownikRenderer>())
+        {
+            celScript.Toggle();
+        }
     }
 
     private void ShowInstructions()

@@ -25,9 +25,9 @@ public class ShipBase : MonoBehaviour, IHitable
     void Awake()
     {
         allElements = new List<Transform>();
-        gun = transform.FindChild("Dzialo");
+        gun = transform.Find("Dzialo");
         allElements.Add(gun);
-        _deck = transform.FindChild("Poklad");
+        _deck = transform.Find("Poklad");
         allElements.Add(_deck);
         _leftSide = transform.Find("LewaBurta");
         allElements.Add(_leftSide);

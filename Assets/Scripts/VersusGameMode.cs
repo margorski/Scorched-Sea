@@ -161,7 +161,7 @@ internal class VersusGameMode : IGameMode
             Players.Add(player, null);
             Hud.Instance.UpdateScores(player.index, player.Wins, player.Loses);
         }
-        Players.Keys.First().IsAi = true;
+        Players.Keys.Last().IsAi = true;
         PlayerInControl = Mathf.RoundToInt(URandom.Range(1, Players.Count));
     }
 

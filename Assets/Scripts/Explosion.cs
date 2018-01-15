@@ -28,7 +28,7 @@ public class Explosion : MonoBehaviour {
         {
             ExplosionRays.Add(Instantiate(ExplosionRayPrefab, transform, false));
             ExplosionRayLines.Add(ExplosionRays[i].GetComponent<LineRenderer>());
-            ExplosionRayLines[i].numPositions = 2;
+            ExplosionRayLines[i].positionCount = 2;
             ExplosionRayCollider.Add(ExplosionRays[i].GetComponent<BoxCollider2D>());
             var length = Random.Range(0.01f, MaxRange);
             var angle = Random.Range(0f, 359.9f);

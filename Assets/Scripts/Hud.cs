@@ -46,20 +46,20 @@ public class Hud : MonoBehaviour {
         // Use this for initialization
     void Init()
     {
-        windForceRenderer = transform.FindChild("Wind/Force").gameObject.GetComponent<LineRenderer>();
-        windGrotURenderer = transform.FindChild("Wind/GrotD").gameObject.GetComponent<LineRenderer>();
-        windGrotDRenderer = transform.FindChild("Wind/GrotU").gameObject.GetComponent<LineRenderer>();
-        player1Name = transform.FindChild("Player1Info/Name").gameObject.GetComponent<Text>();
-        player1Stats = transform.FindChild("Player1Info/Statistics").gameObject.GetComponent<Text>();
-        player1Weapon1 = transform.FindChild("Player1Info/Weapons/Weapon1Name").gameObject.GetComponent<Text>();
-        player1Weapon2 = transform.FindChild("Player1Info/Weapons/Weapon2Name").gameObject.GetComponent<Text>();
-        player1Weapon3 = transform.FindChild("Player1Info/Weapons/Weapon3Name").gameObject.GetComponent<Text>();
-        player2Name = transform.FindChild("Player2Info/Name").gameObject.GetComponent<Text>();
-        player2Stats = transform.FindChild("Player2Info/Statistics").gameObject.GetComponent<Text>();
-        player2Weapon1 = transform.FindChild("Player2Info/Weapons/Weapon1Name").gameObject.GetComponent<Text>();
-        player2Weapon2 = transform.FindChild("Player2Info/Weapons/Weapon2Name").gameObject.GetComponent<Text>();
-        player2Weapon3 = transform.FindChild("Player2Info/Weapons/Weapon3Name").gameObject.GetComponent<Text>();
-        WinMessage = transform.FindChild("WinMsg").gameObject.GetComponent<Text>(); ;
+        windForceRenderer = transform.Find("Wind/Force").gameObject.GetComponent<LineRenderer>();
+        windGrotURenderer = transform.Find("Wind/GrotD").gameObject.GetComponent<LineRenderer>();
+        windGrotDRenderer = transform.Find("Wind/GrotU").gameObject.GetComponent<LineRenderer>();
+        player1Name = transform.Find("Player1Info/Name").gameObject.GetComponent<Text>();
+        player1Stats = transform.Find("Player1Info/Statistics").gameObject.GetComponent<Text>();
+        player1Weapon1 = transform.Find("Player1Info/Weapons/Weapon1Name").gameObject.GetComponent<Text>();
+        player1Weapon2 = transform.Find("Player1Info/Weapons/Weapon2Name").gameObject.GetComponent<Text>();
+        player1Weapon3 = transform.Find("Player1Info/Weapons/Weapon3Name").gameObject.GetComponent<Text>();
+        player2Name = transform.Find("Player2Info/Name").gameObject.GetComponent<Text>();
+        player2Stats = transform.Find("Player2Info/Statistics").gameObject.GetComponent<Text>();
+        player2Weapon1 = transform.Find("Player2Info/Weapons/Weapon1Name").gameObject.GetComponent<Text>();
+        player2Weapon2 = transform.Find("Player2Info/Weapons/Weapon2Name").gameObject.GetComponent<Text>();
+        player2Weapon3 = transform.Find("Player2Info/Weapons/Weapon3Name").gameObject.GetComponent<Text>();
+        WinMessage = transform.Find("WinMsg").gameObject.GetComponent<Text>(); ;
         WinMessage.enabled = false;
     }
 

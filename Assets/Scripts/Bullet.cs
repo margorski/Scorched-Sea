@@ -20,9 +20,7 @@ public class Bullet : MonoBehaviour {
         collider = gameObject.GetComponent<BoxCollider2D>();
         collider.enabled = false;
     }
-
-    public float tempAngle = 45f;
-    public float tempPower = 2f;
+        
 
     // Update is called once per frame
     void Update () { 

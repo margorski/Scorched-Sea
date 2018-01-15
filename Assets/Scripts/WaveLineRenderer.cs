@@ -71,7 +71,7 @@ public class WaveLineRenderer : MonoBehaviour, IRecordable {
             }
         }
 
-        LineToRenderTo.numPositions = _noOfPoints;
+        LineToRenderTo.positionCount = _noOfPoints;
         _pointInterval = Mathf.Abs(WorldXEnd - WorldXStart) / (float)_noOfPoints;
     }
 	
@@ -92,7 +92,7 @@ public class WaveLineRenderer : MonoBehaviour, IRecordable {
         float x;
         float y;
         float z = 0f;
-        if (_noOfPoints != LineToRenderTo.numPositions) return;
+        if (_noOfPoints != LineToRenderTo.positionCount) return;
         for (int index = 0; index < _noOfPoints; index++)
         {
             x = WorldXStart + _pointInterval * index;
