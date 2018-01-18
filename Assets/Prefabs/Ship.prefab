@@ -263,7 +263,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShipScript: {fileID: 114729941928376206}
-  NumberOfSegments: 10
+  NumberOfSegments: 15
   TimeIntervalPerSegment: 0.2
   g: 10
   LineToRenderTo: {fileID: 120978987531107390}
@@ -293,6 +293,7 @@ MonoBehaviour:
   FocusCamera: 0
   BoatSwims: 0
   PowerBuildUp: 0.05
+  celownik: {fileID: 114425030086861520}
 --- !u!120 &120133608927684250
 LineRenderer:
   m_ObjectHideFlags: 1

@@ -3,11 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-[RequireComponent(typeof(LineRenderer))]
+public class Celownik
+{
+    public static float getDown(float t, float angle, float g, float v0)
+    {
+        return -(g * t * t) / 2 +  Mathf.Sin(angle) * v0 * t;
+    }
 
+    public static float getForward(float t, float angle, float wind, float mass, float v0)
+    {
+        return (wind / mass * t * t) / 2 + Mathf.Cos(angle) * v0 * t;
+    }
+}
+
+[RequireComponent(typeof(LineRenderer))]
 public class CelownikRenderer : MonoBehaviour {
 
-    public Ship ShipScript; 
+    public ShipShooter ShipScript; 
     public int NumberOfSegments;
     public float TimeIntervalPerSegment;
     public float g;
@@ -22,11 +34,11 @@ public class CelownikRenderer : MonoBehaviour {
     // Use this for initialization
     void Start () {
         LineToRenderTo.positionCount = _noOfPoints;
+        Hide();
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 
     void FixedUpdate()
@@ -53,28 +65,18 @@ public class CelownikRenderer : MonoBehaviour {
 
     private float getY(float t, float angle)
     {
+        float v0 = ShipScript.ShootPower;
         float transformAngle = angle - 90 * Mathf.Deg2Rad;
-        return Mathf.Cos(transformAngle) * getDown(t, angle) + Mathf.Sin(-transformAngle) * getForward(t, angle);
+        return Mathf.Cos(transformAngle) * Celownik.getDown(t, angle, g, v0) +
+               Mathf.Sin(-transformAngle) * Celownik.getForward(t, angle, GameManager.Instance.WindForce, 10f, v0);
     }
 
     private float getX(float t, float angle)
     {
+        float v0 = ShipScript.ShootPower;
         float transformAngle = angle - 90 * Mathf.Deg2Rad;
-        return Mathf.Sin(transformAngle) * getDown(t, angle) + Mathf.Cos(transformAngle) * getForward(t, angle);
-    }
-
-    private float getDown(float t, float angle)
-    {
-        float v0 = ShipScript.ShootPower;
-        return -(g * t * t) / 2 +  Mathf.Sin(angle) * v0 * t;
-    }
-
-    private float getForward(float t, float angle)
-    {
-        float v0 = ShipScript.ShootPower;
-        float mass = 10f;
-        float wind = GameManager.Instance.WindForce / mass;
-        return (wind * t * t) / 2 + Mathf.Cos(angle) * v0 * t;
+        return Mathf.Sin(transformAngle) * Celownik.getDown(t, angle, g, v0) + 
+               Mathf.Cos(transformAngle) * Celownik.getForward(t, angle, GameManager.Instance.WindForce, 10f, v0);
     }
 
     public void Show()

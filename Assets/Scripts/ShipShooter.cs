@@ -14,6 +14,7 @@ public class ShipShooter : ShipBase
     public Weapons Weapon;
     public float speed = 1;
     public float angle = 90;
+    public float ShootPower { get { return power; } }
     public int death = 0;
     public int kill = 0;
     public int ArmageddonShot = 1;
@@ -164,5 +165,20 @@ public class ShipShooter : ShipBase
         allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
         allBulets.Add(Instantiate(bullets, gun.transform.position + (gun.transform.rotation * new Vector3(0f, 0.1f, 0f)), gun.transform.rotation) as Bullet);
         allBulets.ForEach(x => x.Shoot(Random.Range(10, 13), Random.Range(-50, 50), Weapons.Blast));
+    }
+
+    public CelownikRenderer celownik;
+    protected override void OnCurrentSetActive(bool isActive) 
+    {
+        if (celownik == null)
+            return;
+        if (isActive)
+        {
+            celownik.Show();
+        }
+        else
+        {
+            celownik.Hide();
+        }
     }
 }

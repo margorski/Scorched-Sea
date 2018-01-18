@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Ship : ShipShooter {
 
-    public float ShootPower { get { return power; } }
     private float _doubleClickInterval = 0.3f;
     private float _clickTimestamp;
     private enum MouseClick
