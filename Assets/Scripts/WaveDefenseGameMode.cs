@@ -50,6 +50,7 @@ internal class WaveDefenseGameMode : IGameMode
         var xStart = -URandom.Range(-1f, 1f);
         var newShip = GameManager.Instance.InstantiateRelay(GameManager.Spawnables.PlayerShip);
         newShip.transform.position = new Vector3(xStart, Waver.Instance.GetY(xStart), 0f);
+        newShip.SetActive(true);
         Player = newShip.GetComponent<Ship>();
         Player.FocusCamera = true;
         Player.SetCurrent(true);
@@ -59,14 +60,14 @@ internal class WaveDefenseGameMode : IGameMode
         if (DroneSpawnerInstanceLeft == null)
         {
             DroneSpawnerInstanceLeft = GameManager.Instance.InstantiateRelay(GameManager.Spawnables.DroneShipSpawner).GetComponent<Spawner>();
-            DroneSpawnerInstanceLeft.PlayerLocation = Player.transform;
             DroneSpawnerInstanceLeft.WorldXSpawnPosition *= -1f;
         }
         if (DroneSpawnerInstanceRight == null)
         {
             DroneSpawnerInstanceRight = GameManager.Instance.InstantiateRelay(GameManager.Spawnables.DroneShipSpawner).GetComponent<Spawner>();
-            DroneSpawnerInstanceRight.PlayerLocation = Player.transform;
         }
+        DroneSpawnerInstanceLeft.PlayerLocation = Player.transform;
+        DroneSpawnerInstanceRight.PlayerLocation = Player.transform;
         DroneSpawnerInstanceLeft.StartSpawning();
         DroneSpawnerInstanceRight.StartSpawning();
     }
@@ -82,6 +83,7 @@ internal class WaveDefenseGameMode : IGameMode
 
     public void OnShipFired()
     {
+        Player.SetCurrent(true);
     }
 
     public List<ShipShooter> GetAllPlayerShips()

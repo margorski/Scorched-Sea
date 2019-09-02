@@ -220,11 +220,14 @@ public class GameManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.F1))     ShowInstructions();
     }
 
+    public bool isCelownik = false;
+
     private void ShowCelownik()
     {
+        isCelownik = !isCelownik;
         foreach (var celScript in FindObjectsOfType<CelownikRenderer>())
         {
-            celScript.Toggle();
+            celScript.SetVisible(isCelownik);
         }
     }
 

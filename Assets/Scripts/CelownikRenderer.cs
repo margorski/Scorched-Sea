@@ -89,6 +89,11 @@ public class CelownikRenderer : MonoBehaviour {
         LineToRenderTo.enabled = false;
     }
 
+    public void SetVisible(bool v)
+    {
+        LineToRenderTo.enabled = v;
+    }
+
     public void Toggle()
     {
         LineToRenderTo.enabled = !LineToRenderTo.enabled;

@@ -95,4 +95,9 @@ public class Ship : ShipShooter {
         }
     }
 
+    protected override void OnDie()
+    {
+        base.OnDie();
+        GameManager.Instance.PlayerDied(this);
+    }
 }

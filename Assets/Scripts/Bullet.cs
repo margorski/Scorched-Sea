@@ -7,7 +7,7 @@ public class Bullet : MonoBehaviour {
     private Ship.Weapons bulletType;
     private Rigidbody2D rb;
     private bool _leci = false;
-    private BoxCollider2D collider;
+    private BoxCollider2D _collider;
     private Vector2 velocityVector;
     public float colliderTimer = 0.5f;
     public GameObject ExplosionPrefab;
@@ -17,8 +17,8 @@ public class Bullet : MonoBehaviour {
         
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.velocity = velocityVector;
-        collider = gameObject.GetComponent<BoxCollider2D>();
-        collider.enabled = false;
+        _collider = gameObject.GetComponent<BoxCollider2D>();
+        _collider.enabled = false;
     }
         
 
@@ -68,7 +68,7 @@ public class Bullet : MonoBehaviour {
         {
             colliderTimer -= Time.fixedDeltaTime;
             if (colliderTimer <= 0.0f)
-                collider.enabled = true;
+                _collider.enabled = true;
         }
         if (_leci)
         {
@@ -94,7 +94,7 @@ public class Bullet : MonoBehaviour {
 
     private bool CollideWithWater()
     {
-        return collider.enabled && transform.position.y <= Waver.Instance.GetY(transform.position.x);
+        return _collider.enabled && transform.position.y <= Waver.Instance.GetY(transform.position.x);
     }
 
     private void Die()
