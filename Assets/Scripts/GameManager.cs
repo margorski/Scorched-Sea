@@ -236,7 +236,7 @@ public class GameManager : MonoBehaviour {
         if (Instructions != null)
         {
             Instructions.SetActive(true);
-            Invoke("HideInstructions", 3f);
+            Invoke("HideInstructions", 5f);
         }
     }
 

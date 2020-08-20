@@ -292,8 +292,8 @@ MonoBehaviour:
   bullets: {fileID: 114076730034148588, guid: a9ce36ee9b7de0e4ca3fd55ece642dd0, type: 2}
   FocusCamera: 0
   BoatSwims: 0
-  PowerBuildUp: 0.05
-  celownik: {fileID: 114425030086861520}
+  PowerBuildUp: 0.2
+  celownik: {fileID: 0}
 --- !u!120 &120133608927684250
 LineRenderer:
   m_ObjectHideFlags: 1

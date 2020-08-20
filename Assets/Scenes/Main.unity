@@ -737,6 +737,11 @@ Prefab:
       propertyPath: Instructions
       value: 
       objectReference: {fileID: 921094305}
+    - target: {fileID: 114702045171714874, guid: 86c19ff809b5d10478df3ed1a904ef18,
+        type: 2}
+      propertyPath: isCelownik
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 86c19ff809b5d10478df3ed1a904ef18, type: 2}
   m_IsPrefabParent: 0
